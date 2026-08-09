@@ -4,13 +4,9 @@ export const HeroWrapper = styled.section`
   position: relative;
 
   width: 100%;
-  max-width: 1440px;
+  height: 595px;
 
-  height: min(595px, calc(100vw * 595 / 1440));
-
-  min-height: 400px;
-
-  margin: 0 auto;
+  margin: 0;
 
   overflow: hidden;
 
@@ -18,11 +14,6 @@ export const HeroWrapper = styled.section`
   justify-content: center;
 
   background: #111111;
-
-  @media (max-width: 600px) {
-    height: auto;
-    min-height: 595px;
-  }
 `;
 
 export const HeroBackground = styled.div`
@@ -63,10 +54,6 @@ export const HeroContent = styled.div`
   align-items: center;
 
   box-sizing: border-box;
-
-  @media (max-width: 600px) {
-    padding: 40px 20px;
-  }
 `;
 
 export const Title = styled.h1`
@@ -80,10 +67,6 @@ export const Title = styled.h1`
   line-height: 1.2;
 
   text-align: center;
-
-  @media (max-width: 600px) {
-    font-size: 22px;
-  }
 `;
 
 export const Info = styled.div`
@@ -94,10 +77,6 @@ export const Info = styled.div`
   justify-content: center;
 
   gap: 25px;
-
-  @media (max-width: 600px) {
-    gap: 16px;
-  }
 `;
 
 export const Description = styled.p`
@@ -111,10 +90,6 @@ export const Description = styled.p`
   line-height: 1.15;
 
   text-align: right;
-
-  @media (max-width: 600px) {
-    font-size: 12px;
-  }
 `;
 
 export const Divider = styled.div`
@@ -124,10 +99,6 @@ export const Divider = styled.div`
   flex-shrink: 0;
 
   background: #ffffff;
-
-  @media (max-width: 600px) {
-    height: 70px;
-  }
 `;
 
 export const DateBlock = styled.p`
@@ -149,10 +120,6 @@ export const DateBlock = styled.p`
 
     font-size: 9px;
   }
-
-  @media (max-width: 600px) {
-    font-size: 12px;
-  }
 `;
 
 export const SearchWrapper = styled.form`
@@ -171,12 +138,6 @@ export const SearchWrapper = styled.form`
   background: #ffffff;
 
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
-
-  @media (max-width: 600px) {
-    width: min(337px, 100%);
-
-    margin-top: 55px;
-  }
 `;
 
 export const SearchInput = styled.input`
