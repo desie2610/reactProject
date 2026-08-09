@@ -959,13 +959,9 @@ Error generating stack: `+e.message+`
   position: relative;
 
   width: 100%;
-  max-width: 1440px;
+  height: 595px;
 
-  height: min(595px, calc(100vw * 595 / 1440));
-
-  min-height: 400px;
-
-  margin: 0 auto;
+  margin: 0;
 
   overflow: hidden;
 
@@ -973,11 +969,6 @@ Error generating stack: `+e.message+`
   justify-content: center;
 
   background: #111111;
-
-  @media (max-width: 600px) {
-    height: auto;
-    min-height: 595px;
-  }
 `,Pi=M.div`
   position: absolute;
 
@@ -1014,10 +1005,6 @@ Error generating stack: `+e.message+`
   align-items: center;
 
   box-sizing: border-box;
-
-  @media (max-width: 600px) {
-    padding: 40px 20px;
-  }
 `,Ii=M.h1`
   margin: 0;
 
@@ -1029,10 +1016,6 @@ Error generating stack: `+e.message+`
   line-height: 1.2;
 
   text-align: center;
-
-  @media (max-width: 600px) {
-    font-size: 22px;
-  }
 `,Li=M.div`
   margin-top: 43px;
 
@@ -1041,10 +1024,6 @@ Error generating stack: `+e.message+`
   justify-content: center;
 
   gap: 25px;
-
-  @media (max-width: 600px) {
-    gap: 16px;
-  }
 `,Ri=M.p`
   margin: 0;
 
@@ -1056,10 +1035,6 @@ Error generating stack: `+e.message+`
   line-height: 1.15;
 
   text-align: right;
-
-  @media (max-width: 600px) {
-    font-size: 12px;
-  }
 `,P=M.div`
   width: 2px;
   height: 78px;
@@ -1067,10 +1042,6 @@ Error generating stack: `+e.message+`
   flex-shrink: 0;
 
   background: #ffffff;
-
-  @media (max-width: 600px) {
-    height: 70px;
-  }
 `,F=M.p`
   margin: 0;
 
@@ -1090,10 +1061,6 @@ Error generating stack: `+e.message+`
 
     font-size: 9px;
   }
-
-  @media (max-width: 600px) {
-    font-size: 12px;
-  }
 `,zi=M.form`
   width: 337px;
   height: 24px;
@@ -1110,12 +1077,6 @@ Error generating stack: `+e.message+`
   background: #ffffff;
 
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
-
-  @media (max-width: 600px) {
-    width: min(337px, 100%);
-
-    margin-top: 55px;
-  }
 `,Bi=M.input`
   flex: 1;
 
