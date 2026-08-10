@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiSearch } from "react-icons/fi";
 
 import heroBg from "../../assets/weather.png";
@@ -19,8 +19,18 @@ import {
 
 const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY;
 
-export default function Hero() {
+export default function Hero({ onCityAdd }) {
   const [query, setQuery] = useState("");
+
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   const searchLocation = async () => {
     const value = query.trim();
@@ -31,11 +41,11 @@ export default function Hero() {
     }
 
     try {
-     const response = await fetch(
-  `https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(
-    value
-  )}&limit=5&appid=${API_KEY}`
-);;
+      const response = await fetch(
+        `https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(
+          value
+        )}&limit=1&appid=${API_KEY}`
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error: ${response.status}`);
@@ -50,18 +60,46 @@ export default function Hero() {
         return;
       }
 
-      data.forEach((location, index) => {
-        console.log(
-          `${index + 1}. ${location.name}, ${location.country}`,
-          {
-            city: location.name,
-            country: location.country,
-            state: location.state || "Немає данних",
-            latitude: location.lat,
-            longitude: location.lon,
-          }
+      const location = data[0];
+
+      const weatherResponse = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?lat=${location.lat}&lon=${location.lon}&appid=${API_KEY}&units=metric`
+      );
+
+      if (!weatherResponse.ok) {
+        throw new Error(
+          `Weather HTTP error: ${weatherResponse.status}`
         );
-      });
+      }
+
+      const weather = await weatherResponse.json();
+
+      const cityData = {
+        id: `${location.lat}-${location.lon}`,
+
+        // Показываем именно то, что пользователь написал
+        name: value,
+
+        country: location.country,
+
+        temperature: weather.main.temp,
+
+        icon: weather.weather[0].icon,
+
+        description: weather.weather[0].description,
+
+        timezone: weather.timezone,
+
+        latitude: location.lat,
+
+        longitude: location.lon,
+      };
+
+      if (onCityAdd) {
+        onCityAdd(cityData);
+      }
+
+      setQuery("");
     } catch (error) {
       console.error("Помилка пошуку:", error);
     }
@@ -69,8 +107,49 @@ export default function Hero() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
     searchLocation();
   };
+
+  const currentDate = new Date();
+
+  const month = currentDate.toLocaleString("en-US", {
+    month: "long",
+  });
+
+  const year = currentDate.getFullYear();
+
+  const weekday = currentDate.toLocaleString("en-US", {
+    weekday: "long",
+  });
+
+  const day = currentDate.getDate();
+
+  const getDaySuffix = (day) => {
+    if (day >= 11 && day <= 13) {
+      return "th";
+    }
+
+    switch (day % 10) {
+      case 1:
+        return "st";
+      case 2:
+        return "nd";
+      case 3:
+        return "rd";
+      default:
+        return "th";
+    }
+  };
+
+  const hours = String(currentTime.getHours()).padStart(
+    2,
+    "0"
+  );
+
+  const minutes = String(
+    currentTime.getMinutes()
+  ).padStart(2, "0");
 
   return (
     <HeroWrapper>
@@ -95,9 +174,12 @@ export default function Hero() {
           <Divider />
 
           <DateBlock>
-            October 2023
+            {month} {year}
             <br />
-            Friday, 13<sup>th</sup>
+            {weekday}, {day}
+            <sup>{getDaySuffix(day)}</sup>
+            <br />
+            {hours}:{minutes}
           </DateBlock>
         </Info>
 
@@ -105,7 +187,9 @@ export default function Hero() {
           <SearchInput
             type="text"
             value={query}
-            onChange={(event) => setQuery(event.target.value)}
+            onChange={(event) =>
+              setQuery(event.target.value)
+            }
             placeholder="Search location..."
           />
 

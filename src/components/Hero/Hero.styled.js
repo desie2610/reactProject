@@ -46,12 +46,13 @@ export const HeroContent = styled.div`
 
   width: 100%;
   max-width: 800px;
-
-  padding: 48px 20px 60px;
+  height: 100%;
 
   display: flex;
   flex-direction: column;
+
   align-items: center;
+  justify-content: center;
 
   box-sizing: border-box;
 `;
@@ -63,7 +64,6 @@ export const Title = styled.h1`
 
   font-size: 23px;
   font-weight: 700;
-
   line-height: 1.2;
 
   text-align: center;
@@ -73,6 +73,7 @@ export const Info = styled.div`
   margin-top: 43px;
 
   display: flex;
+
   align-items: center;
   justify-content: center;
 
@@ -86,7 +87,6 @@ export const Description = styled.p`
 
   font-size: 14px;
   font-weight: 400;
-
   line-height: 1.15;
 
   text-align: right;
@@ -108,7 +108,6 @@ export const DateBlock = styled.p`
 
   font-size: 14px;
   font-weight: 400;
-
   line-height: 1.15;
 
   text-align: left;
@@ -129,6 +128,7 @@ export const SearchWrapper = styled.form`
   margin-top: 75px;
 
   display: flex;
+
   align-items: stretch;
 
   overflow: hidden;
@@ -176,6 +176,7 @@ export const SearchButton = styled.button`
   flex-shrink: 0;
 
   display: flex;
+
   align-items: center;
   justify-content: center;
 

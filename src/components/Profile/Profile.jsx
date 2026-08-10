@@ -28,12 +28,13 @@ export default function Profile({
   onUserUpdate,
   onLogout,
 }) {
-  const savedUser = JSON.parse(localStorage.getItem("user")) || {};
+  const savedUser =
+    JSON.parse(localStorage.getItem("weatherUser")) || {};
 
   const [user, setUser] = useState(savedUser);
 
   const [avatar, setAvatar] = useState(
-    localStorage.getItem("avatar") || null
+    localStorage.getItem("weatherAvatar") || null
   );
 
   const [editing, setEditing] = useState(false);
@@ -59,7 +60,7 @@ export default function Profile({
     reader.onloadend = () => {
       const image = reader.result;
 
-      localStorage.setItem("avatar", image);
+      localStorage.setItem("weatherAvatar", image);
 
       setAvatar(image);
 
@@ -98,7 +99,10 @@ export default function Profile({
       password: formData.password,
     };
 
-    localStorage.setItem("user", JSON.stringify(updatedUser));
+    localStorage.setItem(
+      "weatherUser",
+      JSON.stringify(updatedUser)
+    );
 
     setUser(updatedUser);
 
@@ -139,7 +143,7 @@ export default function Profile({
         <CloseButton
           type="button"
           onClick={onClose}
-          aria-label="Close profile"
+          aria-label="Close"
         >
           <FiX size={24} />
         </CloseButton>
@@ -188,7 +192,7 @@ export default function Profile({
               </Value>
             )}
           </InfoItem>
-          
+
           <InfoItem>
             <Label>E-Mail</Label>
 

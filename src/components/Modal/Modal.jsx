@@ -14,7 +14,7 @@ import {
   LoginLink,
 } from "./Modal.styled";
 
-export default function Modal({ onClose }) {
+export default function Modal({ onClose, onSubmit }) {
   const formik = useFormik({
     initialValues: {
       username: "",
@@ -23,9 +23,16 @@ export default function Modal({ onClose }) {
     },
 
     onSubmit: (values, { resetForm }) => {
-      localStorage.setItem("user", JSON.stringify(values));
+      if (onSubmit) {
+        onSubmit(values);
+      } else {
+        localStorage.setItem(
+          "weatherUser",
+          JSON.stringify(values)
+        );
 
-      toast.success("Registration successful!");
+        toast.success("Registration successful!");
+      }
 
       resetForm();
       onClose();
