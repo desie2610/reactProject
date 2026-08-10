@@ -4,9 +4,10 @@ import "react-toastify/dist/ReactToastify.css";
 
 import Header from "./components/Header/Header";
 import Hero from "./components/Hero/Hero";
+import WeatherList from "./components/WeatherList/WeatherList";
+import News from "./components/News/News";
 import Modal from "./components/Modal/Modal";
 import Profile from "./components/Profile/Profile";
-import WeatherList from "./components/WeatherList/WeatherList";
 
 import { GlobalStyle } from "./GlobalStyle";
 import { AppWrapper } from "./App.styled";
@@ -179,7 +180,7 @@ export default function App() {
         (city) => city.id === cityId
       );
 
-      // Если город уже в избранном — удаляем его
+      // Если город уже в избранном — удаляем
       if (isFavorite) {
         const updatedFavorites =
           prevFavorites.filter(
@@ -246,7 +247,7 @@ export default function App() {
         timezone: weather.timezone,
       };
 
-      // Обновляем карточки
+      // Обновляем карточку
       setCities((prevCities) =>
         prevCities.map((item) =>
           item.id === city.id
@@ -255,8 +256,8 @@ export default function App() {
         )
       );
 
-      // Если город избранный — обновляем его
-      // и в localStorage
+      // Если город избранный —
+      // обновляем его данные в избранном
       setFavorites((prevFavorites) =>
         prevFavorites.map((item) =>
           item.id === city.id
@@ -297,6 +298,8 @@ export default function App() {
           onFavorite={handleFavorite}
           onDelete={handleDeleteCity}
         />
+
+        <News />
 
         {isModalOpen && (
           <Modal
