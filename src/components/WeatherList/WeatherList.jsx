@@ -5,6 +5,9 @@ import {
   FiTrash2,
 } from "react-icons/fi";
 
+import HourlyForecast from "../HourlyForecast/HourlyForecast";
+import WeeklyForecast from "../WeeklyForecast/WeeklyForecast";
+
 import {
   WeatherSection,
   WeatherListWrapper,
@@ -37,6 +40,12 @@ export default function WeatherList({
     new Date()
   );
 
+  const [selectedCity, setSelectedCity] =
+    useState(null);
+
+  const [selectedWeeklyCity, setSelectedWeeklyCity] =
+    useState(null);
+
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
@@ -50,7 +59,9 @@ export default function WeatherList({
       currentTime.getTime() +
       currentTime.getTimezoneOffset() * 60000;
 
-    return new Date(utcTime + timezone * 1000);
+    return new Date(
+      utcTime + timezone * 1000
+    );
   };
 
   const formatTime = (date) =>
@@ -61,10 +72,9 @@ export default function WeatherList({
     });
 
   const formatDate = (date) => {
-    const day = String(date.getDate()).padStart(
-      2,
-      "0"
-    );
+    const day = String(
+      date.getDate()
+    ).padStart(2, "0");
 
     const month = String(
       date.getMonth() + 1
@@ -86,19 +96,25 @@ export default function WeatherList({
     <WeatherSection>
       <WeatherListWrapper>
         {cities.map((city) => {
-          const cityDate = getCityDate(city.timezone);
+          const cityDate = getCityDate(
+            city.timezone
+          );
 
-          // Проверяем, есть ли город в избранном
           const isFavorite = favorites.some(
-            (favorite) => favorite.id === city.id
+            (favorite) =>
+              favorite.id === city.id
           );
 
           return (
             <WeatherCard key={city.id}>
               <CardTop>
-                <City>{city.name}</City>
+                <City>
+                  {city.name}
+                </City>
 
-                <Country>{city.country}</Country>
+                <Country>
+                  {city.country}
+                </Country>
               </CardTop>
 
               <Time>
@@ -106,11 +122,23 @@ export default function WeatherList({
               </Time>
 
               <ForecastButtons>
-                <ForecastButton type="button">
+                <ForecastButton
+                  type="button"
+                  onClick={() => {
+                    setSelectedCity(city);
+                    setSelectedWeeklyCity(null);
+                  }}
+                >
                   Hourly forecast
                 </ForecastButton>
 
-                <ForecastButton type="button">
+                <ForecastButton
+                  type="button"
+                  onClick={() => {
+                    setSelectedWeeklyCity(city);
+                    setSelectedCity(null);
+                  }}
+                >
                   Weekly forecast
                 </ForecastButton>
               </ForecastButtons>
@@ -133,13 +161,18 @@ export default function WeatherList({
               />
 
               <Temperature>
-                {Math.round(city.temperature)}°C
+                {Math.round(
+                  city.temperature
+                )}
+                °C
               </Temperature>
 
               <CardActions>
                 <ActionButton
                   type="button"
-                  onClick={() => onRefresh(city)}
+                  onClick={() =>
+                    onRefresh(city)
+                  }
                 >
                   <FiRefreshCw />
                 </ActionButton>
@@ -147,7 +180,9 @@ export default function WeatherList({
                 <FavoriteButton
                   type="button"
                   $active={isFavorite}
-                  onClick={() => onFavorite(city.id)}
+                  onClick={() =>
+                    onFavorite(city.id)
+                  }
                 >
                   <FiHeart />
                 </FavoriteButton>
@@ -158,7 +193,9 @@ export default function WeatherList({
 
                 <DeleteButton
                   type="button"
-                  onClick={() => onDelete(city.id)}
+                  onClick={() =>
+                    onDelete(city.id)
+                  }
                 >
                   <FiTrash2 />
                 </DeleteButton>
@@ -167,6 +204,24 @@ export default function WeatherList({
           );
         })}
       </WeatherListWrapper>
+
+      {selectedCity && (
+        <HourlyForecast
+          city={selectedCity}
+          onClose={() =>
+            setSelectedCity(null)
+          }
+        />
+      )}
+
+      {selectedWeeklyCity && (
+        <WeeklyForecast
+          city={selectedWeeklyCity}
+          onClose={() =>
+            setSelectedWeeklyCity(null)
+          }
+        />
+      )}
     </WeatherSection>
   );
 }

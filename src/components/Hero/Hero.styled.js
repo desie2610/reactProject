@@ -4,7 +4,8 @@ export const HeroWrapper = styled.section`
   position: relative;
 
   width: 100%;
-  height: 595px;
+  height: calc(100vh - 80px);
+  min-height: 650px;
 
   margin: 0;
 
@@ -45,7 +46,7 @@ export const HeroContent = styled.div`
   z-index: 1;
 
   width: 100%;
-  max-width: 800px;
+  max-width: 1100px;
   height: 100%;
 
   display: flex;
@@ -62,7 +63,7 @@ export const Title = styled.h1`
 
   color: #ffffff;
 
-  font-size: 23px;
+  font-size: 42px;
   font-weight: 700;
   line-height: 1.2;
 
@@ -70,14 +71,14 @@ export const Title = styled.h1`
 `;
 
 export const Info = styled.div`
-  margin-top: 43px;
+  margin-top: 55px;
 
   display: flex;
 
   align-items: center;
   justify-content: center;
 
-  gap: 25px;
+  gap: 40px;
 `;
 
 export const Description = styled.p`
@@ -85,7 +86,7 @@ export const Description = styled.p`
 
   color: #ffffff;
 
-  font-size: 14px;
+  font-size: 20px;
   font-weight: 400;
   line-height: 1.15;
 
@@ -94,7 +95,7 @@ export const Description = styled.p`
 
 export const Divider = styled.div`
   width: 2px;
-  height: 78px;
+  height: 110px;
 
   flex-shrink: 0;
 
@@ -106,7 +107,7 @@ export const DateBlock = styled.p`
 
   color: #ffffff;
 
-  font-size: 14px;
+  font-size: 20px;
   font-weight: 400;
   line-height: 1.15;
 
@@ -115,17 +116,17 @@ export const DateBlock = styled.p`
   sup {
     position: relative;
 
-    top: -2px;
+    top: -3px;
 
-    font-size: 9px;
+    font-size: 12px;
   }
 `;
 
 export const SearchWrapper = styled.form`
-  width: 337px;
-  height: 24px;
+  width: 625px;
+  height: 42px;
 
-  margin-top: 75px;
+  margin-top: 90px;
 
   display: flex;
 
@@ -133,7 +134,7 @@ export const SearchWrapper = styled.form`
 
   overflow: hidden;
 
-  border-radius: 6px;
+  border-radius: 8px;
 
   background: #ffffff;
 
@@ -145,9 +146,9 @@ export const SearchInput = styled.input`
 
   width: 100%;
   min-width: 0;
-  height: 24px;
+  height: 42px;
 
-  padding: 0 14px;
+  padding: 0 20px;
 
   border: none;
   outline: none;
@@ -155,7 +156,7 @@ export const SearchInput = styled.input`
   background: #ffffff;
   color: #222222;
 
-  font-size: 9px;
+  font-size: 14px;
   font-weight: 400;
 
   box-sizing: border-box;
@@ -170,8 +171,8 @@ export const SearchInput = styled.input`
 `;
 
 export const SearchButton = styled.button`
-  width: 24px;
-  height: 24px;
+  width: 42px;
+  height: 42px;
 
   flex-shrink: 0;
 
@@ -202,7 +203,7 @@ export const SearchButton = styled.button`
   }
 
   svg {
-    width: 15px;
-    height: 15px;
+    width: 20px;
+    height: 20px;
   }
 `;

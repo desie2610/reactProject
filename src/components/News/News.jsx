@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { FiArrowRight } from "react-icons/fi";
+import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 
 import {
   NewsSection,
@@ -8,8 +8,10 @@ import {
   NewsLabel,
   NewsTitle,
   NewsText,
+  NewsButtons,
   NewsButton,
   NewsImageWrapper,
+  NewsSideImage,
   NewsImage,
 } from "./News.styled";
 
@@ -79,7 +81,6 @@ export default function News() {
       }
 
       setArticles((previousArticles) => {
-        // Убираем возможные дубликаты
         const existingUrls = new Set(
           previousArticles.map((article) => article.url)
         );
@@ -105,6 +106,21 @@ export default function News() {
     }
   };
 
+  // Предзагрузка ближайших изображений
+  useEffect(() => {
+    const imagesToPreload = articles.slice(
+      Math.max(0, currentIndex - 1),
+      currentIndex + 3
+    );
+
+    imagesToPreload.forEach((article) => {
+      if (!article?.urlToImage) return;
+
+      const image = new Image();
+      image.src = article.urlToImage;
+    });
+  }, [articles, currentIndex]);
+
   // Первая загрузка
   useEffect(() => {
     loadNews(1);
@@ -122,8 +138,7 @@ export default function News() {
       return;
     }
 
-    // Если дошли до конца —
-    // загружаем следующую страницу
+    // Дошли до конца загруженных новостей
     const nextPage = page + 1;
 
     try {
@@ -144,7 +159,7 @@ export default function News() {
         !Array.isArray(data.articles) ||
         data.articles.length === 0
       ) {
-        console.log("Больше новостей нет.");
+        console.log("Більше новин немає.");
         return;
       }
 
@@ -158,9 +173,11 @@ export default function News() {
       );
 
       if (newArticles.length === 0) {
-        console.log("Новых уникальных новостей нет.");
+        console.log("Нових унікальних новин немає.");
         return;
       }
+
+      const newStartIndex = articles.length;
 
       setArticles((previousArticles) => [
         ...previousArticles,
@@ -169,13 +186,19 @@ export default function News() {
 
       setPage(nextPage);
 
-      // Показываем первую новую новость
-      setCurrentIndex(
-        articles.length
-      );
+      // Переходимо на першу новину нової сторінки
+      setCurrentIndex(newStartIndex);
+
+      // Одразу передзавантажуємо нові зображення
+      newArticles.slice(0, 3).forEach((article) => {
+        if (!article?.urlToImage) return;
+
+        const image = new Image();
+        image.src = article.urlToImage;
+      });
     } catch (error) {
       console.error(
-        "Ошибка загрузки следующей страницы:",
+        "Помилка завантаження наступної сторінки:",
         error
       );
     } finally {
@@ -183,7 +206,26 @@ export default function News() {
     }
   };
 
+  // Предыдущая новость
+  const handlePrevious = () => {
+    if (loadingMore) return;
+
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+    }
+  };
+
   const currentArticle = articles[currentIndex];
+
+  const previousArticle =
+    currentIndex > 0
+      ? articles[currentIndex - 1]
+      : null;
+
+  const nextArticle =
+    currentIndex < articles.length - 1
+      ? articles[currentIndex + 1]
+      : null;
 
   return (
     <NewsSection ref={sectionRef}>
@@ -231,17 +273,31 @@ export default function News() {
                   "Read the latest news and interesting stories."}
               </NewsText>
 
-              <NewsButton
-                type="button"
-                onClick={handleNext}
-                disabled={loadingMore}
-              >
-                {loadingMore
-                  ? "Loading..."
-                  : "See more"}
+              <NewsButtons>
+                <NewsButton
+                  type="button"
+                  onClick={handlePrevious}
+                  disabled={
+                    loadingMore ||
+                    currentIndex === 0
+                  }
+                >
+                  <FiArrowLeft />
+                  Back
+                </NewsButton>
 
-                <FiArrowRight />
-              </NewsButton>
+                <NewsButton
+                  type="button"
+                  onClick={handleNext}
+                  disabled={loadingMore}
+                >
+                  {loadingMore
+                    ? "Loading..."
+                    : "See more"}
+
+                  <FiArrowRight />
+                </NewsButton>
+              </NewsButtons>
             </>
           )}
         </NewsContent>
@@ -249,6 +305,28 @@ export default function News() {
         <NewsImageWrapper
           className={isVisible ? "visible" : ""}
         >
+          {previousArticle?.urlToImage && (
+            <NewsSideImage
+              className="previous"
+              src={previousArticle.urlToImage}
+              alt={
+                previousArticle.title ||
+                "Previous news"
+              }
+            />
+          )}
+
+          {nextArticle?.urlToImage && (
+            <NewsSideImage
+              className="next"
+              src={nextArticle.urlToImage}
+              alt={
+                nextArticle.title ||
+                "Next news"
+              }
+            />
+          )}
+
           {currentArticle?.urlToImage && (
             <NewsImage
               key={currentArticle.urlToImage}
@@ -256,6 +334,11 @@ export default function News() {
               alt={
                 currentArticle.title || "News"
               }
+              onLoad={(event) => {
+                event.currentTarget.classList.add(
+                  "loaded"
+                );
+              }}
             />
           )}
         </NewsImageWrapper>
