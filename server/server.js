@@ -14,30 +14,50 @@ app.use(
   })
 );
 
+app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.json({
+    status: "ok",
+    message: "Weather News Server is running",
+  });
+});
+
 app.get("/api/news", async (req, res) => {
   try {
     const page = Number(req.query.page) || 1;
 
+    const apiKey = process.env.NEWS_API_KEY;
+
+    if (!apiKey) {
+      return res.status(500).json({
+        status: "error",
+        message: "NEWS_API_KEY is not configured",
+      });
+    }
+
     const url =
-      `https://newsapi.org/v2/everything` +
-      `?q=pets%20OR%20animals` +
-      `&language=en` +
-      `&sortBy=publishedAt` +
-      `&pageSize=4` +
+      "https://newsapi.org/v2/everything" +
+      "?q=pets%20OR%20animals" +
+      "&language=en" +
+      "&sortBy=publishedAt" +
+      "&pageSize=4" +
       `&page=${page}` +
-      `&apiKey=${process.env.NEWS_API_KEY}`;
+      `&apiKey=${apiKey}`;
 
     const response = await fetch(url);
 
     const data = await response.json();
 
     if (!response.ok) {
+      console.error("News API error:", data);
+
       return res.status(response.status).json(data);
     }
 
     res.json(data);
   } catch (error) {
-    console.error("News API error:", error);
+    console.error("Server error:", error);
 
     res.status(500).json({
       status: "error",
@@ -46,8 +66,6 @@ app.get("/api/news", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(
-    `Server running on port ${PORT}`
-  );
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server running on port ${PORT}`);
 });
