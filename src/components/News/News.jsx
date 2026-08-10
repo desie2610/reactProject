@@ -19,11 +19,11 @@ export default function News() {
   const [articles, setArticles] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  const [page, setPage] = useState(1);
+
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState(false);
-
-  const [page, setPage] = useState(1);
 
   const sectionRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -72,21 +72,33 @@ export default function News() {
 
       if (
         data.status !== "ok" ||
-        !data.articles ||
+        !Array.isArray(data.articles) ||
         data.articles.length === 0
       ) {
-        throw new Error("Новости закончились");
+        throw new Error("Новости не найдены");
       }
 
-      setArticles((previousArticles) => [
-        ...previousArticles,
-        ...data.articles,
-      ]);
+      setArticles((previousArticles) => {
+        // Убираем возможные дубликаты
+        const existingUrls = new Set(
+          previousArticles.map((article) => article.url)
+        );
+
+        const newArticles = data.articles.filter(
+          (article) =>
+            article.url && !existingUrls.has(article.url)
+        );
+
+        return [...previousArticles, ...newArticles];
+      });
 
       setPage(pageNumber);
     } catch (error) {
       console.error("Ошибка загрузки новостей:", error);
-      setError(true);
+
+      if (pageNumber === 1) {
+        setError(true);
+      }
     } finally {
       setLoading(false);
       setLoadingMore(false);
@@ -100,6 +112,8 @@ export default function News() {
 
   // Следующая новость
   const handleNext = async () => {
+    if (loadingMore) return;
+
     const nextIndex = currentIndex + 1;
 
     // Если следующая новость уже загружена
@@ -108,11 +122,64 @@ export default function News() {
       return;
     }
 
-    // Если дошли до конца загруженных новостей
-    if (!loadingMore) {
-      await loadNews(page + 1);
+    // Если дошли до конца —
+    // загружаем следующую страницу
+    const nextPage = page + 1;
 
-      setCurrentIndex(nextIndex);
+    try {
+      setLoadingMore(true);
+
+      const response = await fetch(
+        `${API_URL}?page=${nextPage}`
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (
+        data.status !== "ok" ||
+        !Array.isArray(data.articles) ||
+        data.articles.length === 0
+      ) {
+        console.log("Больше новостей нет.");
+        return;
+      }
+
+      const existingUrls = new Set(
+        articles.map((article) => article.url)
+      );
+
+      const newArticles = data.articles.filter(
+        (article) =>
+          article.url && !existingUrls.has(article.url)
+      );
+
+      if (newArticles.length === 0) {
+        console.log("Новых уникальных новостей нет.");
+        return;
+      }
+
+      setArticles((previousArticles) => [
+        ...previousArticles,
+        ...newArticles,
+      ]);
+
+      setPage(nextPage);
+
+      // Показываем первую новую новость
+      setCurrentIndex(
+        articles.length
+      );
+    } catch (error) {
+      console.error(
+        "Ошибка загрузки следующей страницы:",
+        error
+      );
+    } finally {
+      setLoadingMore(false);
     }
   };
 
@@ -121,7 +188,9 @@ export default function News() {
   return (
     <NewsSection ref={sectionRef}>
       <NewsContainer>
-        <NewsContent className={isVisible ? "visible" : ""}>
+        <NewsContent
+          className={isVisible ? "visible" : ""}
+        >
           <NewsLabel>NEWS</NewsLabel>
 
           {loading ? (
@@ -129,16 +198,27 @@ export default function News() {
               <NewsTitle>Loading...</NewsTitle>
 
               <NewsText>
-                Please wait while we load the latest news.
+                Please wait while we load the latest
+                news.
               </NewsText>
             </>
-          ) : error && !currentArticle ? (
+          ) : error ? (
             <>
-              <NewsTitle>Something went wrong</NewsTitle>
+              <NewsTitle>
+                Something went wrong
+              </NewsTitle>
 
               <NewsText>
                 We couldn't load the latest news.
               </NewsText>
+
+              <NewsButton
+                type="button"
+                onClick={() => loadNews(1)}
+              >
+                Try again
+                <FiArrowRight />
+              </NewsButton>
             </>
           ) : (
             <>
@@ -156,7 +236,9 @@ export default function News() {
                 onClick={handleNext}
                 disabled={loadingMore}
               >
-                {loadingMore ? "Loading..." : "See more"}
+                {loadingMore
+                  ? "Loading..."
+                  : "See more"}
 
                 <FiArrowRight />
               </NewsButton>
@@ -171,7 +253,9 @@ export default function News() {
             <NewsImage
               key={currentArticle.urlToImage}
               src={currentArticle.urlToImage}
-              alt={currentArticle.title || "News"}
+              alt={
+                currentArticle.title || "News"
+              }
             />
           )}
         </NewsImageWrapper>
@@ -179,5 +263,3 @@ export default function News() {
     </NewsSection>
   );
 }
-
-/asdasdasdasd/
