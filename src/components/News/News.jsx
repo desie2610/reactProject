@@ -11,17 +11,12 @@ import {
   MoreButton,
 } from "./News.styled";
 
-const API_KEY = import.meta.env.VITE_NEWS_API_KEY;
-
 const PAGE_SIZE = 4;
 
 export default function News() {
   const [articles, setArticles] = useState([]);
-
   const [page, setPage] = useState(1);
-
   const [loading, setLoading] = useState(true);
-
   const [hasMore, setHasMore] = useState(true);
 
   const titleRef = useRef(null);
@@ -34,7 +29,6 @@ export default function News() {
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsTitleVisible(true);
-
           observer.disconnect();
         }
       },
@@ -55,23 +49,27 @@ export default function News() {
       setLoading(true);
 
       const response = await fetch(
-        `https://newsapi.org/v2/everything?q=pets%20OR%20animals&language=en&sortBy=publishedAt&pageSize=${PAGE_SIZE}&page=${currentPage}&apiKey=${API_KEY}`
+        `http://localhost:5000/api/news?page=${currentPage}`
       );
-
-      if (!response.ok) {
-        throw new Error(
-          `HTTP error: ${response.status}`
-        );
-      }
 
       const data = await response.json();
 
-      const validArticles = data.articles.filter(
-        (article) =>
-          article.title &&
-          article.description &&
-          article.urlToImage
-      );
+      console.log("News response:", data);
+
+      if (!response.ok) {
+        throw new Error(
+          data.message ||
+            `HTTP error: ${response.status}`
+        );
+      }
+
+      const validArticles =
+        data.articles?.filter(
+          (article) =>
+            article.title &&
+            article.description &&
+            article.urlToImage
+        ) || [];
 
       setArticles(
         validArticles.slice(0, PAGE_SIZE)
@@ -143,7 +141,9 @@ export default function News() {
           onClick={handleLoadMore}
           disabled={loading}
         >
-          {loading ? "Loading..." : "See more"}
+          {loading
+            ? "Loading..."
+            : "See more"}
         </MoreButton>
       )}
     </NewsSection>
