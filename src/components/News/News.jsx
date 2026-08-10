@@ -1,151 +1,181 @@
 import { useEffect, useRef, useState } from "react";
+import { FiArrowRight } from "react-icons/fi";
 
 import {
   NewsSection,
-  NewsTitle,
-  NewsList,
-  NewsCard,
-  NewsImage,
+  NewsContainer,
   NewsContent,
-  NewsDescription,
-  MoreButton,
+  NewsLabel,
+  NewsTitle,
+  NewsText,
+  NewsButton,
+  NewsImageWrapper,
+  NewsImage,
 } from "./News.styled";
 
-const PAGE_SIZE = 4;
+const API_URL = "https://reactproject-gsav.onrender.com/api/news";
 
 export default function News() {
   const [articles, setArticles] = useState([]);
-  const [page, setPage] = useState(1);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
   const [loading, setLoading] = useState(true);
-  const [hasMore, setHasMore] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [error, setError] = useState(false);
 
-  const titleRef = useRef(null);
+  const [page, setPage] = useState(1);
 
-  const [isTitleVisible, setIsTitleVisible] =
-    useState(false);
+  const sectionRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
 
+  // Анимация при появлении секции
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setIsTitleVisible(true);
+          setIsVisible(true);
           observer.disconnect();
         }
       },
       {
-        threshold: 0.3,
+        threshold: 0.25,
       }
     );
 
-    if (titleRef.current) {
-      observer.observe(titleRef.current);
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
     }
 
     return () => observer.disconnect();
   }, []);
 
-  const fetchNews = async (currentPage) => {
+  // Загрузка новостей
+  const loadNews = async (pageNumber = 1) => {
     try {
-      setLoading(true);
+      if (pageNumber === 1) {
+        setLoading(true);
+      } else {
+        setLoadingMore(true);
+      }
+
+      setError(false);
 
       const response = await fetch(
-        `http://localhost:5000/api/news?page=${currentPage}`
+        `${API_URL}?page=${pageNumber}`
       );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error: ${response.status}`);
+      }
 
       const data = await response.json();
 
-      console.log("News response:", data);
-
-      if (!response.ok) {
-        throw new Error(
-          data.message ||
-            `HTTP error: ${response.status}`
-        );
+      if (
+        data.status !== "ok" ||
+        !data.articles ||
+        data.articles.length === 0
+      ) {
+        throw new Error("Новости закончились");
       }
 
-      const validArticles =
-        data.articles?.filter(
-          (article) =>
-            article.title &&
-            article.description &&
-            article.urlToImage
-        ) || [];
+      setArticles((previousArticles) => [
+        ...previousArticles,
+        ...data.articles,
+      ]);
 
-      setArticles(
-        validArticles.slice(0, PAGE_SIZE)
-      );
-
-      setHasMore(
-        validArticles.length >= PAGE_SIZE
-      );
+      setPage(pageNumber);
     } catch (error) {
-      console.error(
-        "Ошибка загрузки новостей:",
-        error
-      );
+      console.error("Ошибка загрузки новостей:", error);
+      setError(true);
     } finally {
       setLoading(false);
+      setLoadingMore(false);
     }
   };
 
+  // Первая загрузка
   useEffect(() => {
-    fetchNews(1);
+    loadNews(1);
   }, []);
 
-  const handleLoadMore = () => {
-    const nextPage = page + 1;
+  // Следующая новость
+  const handleNext = async () => {
+    const nextIndex = currentIndex + 1;
 
-    setPage(nextPage);
+    // Если следующая новость уже загружена
+    if (nextIndex < articles.length) {
+      setCurrentIndex(nextIndex);
+      return;
+    }
 
-    fetchNews(nextPage);
+    // Если дошли до конца загруженных новостей
+    if (!loadingMore) {
+      await loadNews(page + 1);
+
+      setCurrentIndex(nextIndex);
+    }
   };
 
+  const currentArticle = articles[currentIndex];
+
   return (
-    <NewsSection>
-      <NewsTitle
-        ref={titleRef}
-        $visible={isTitleVisible}
-      >
-        Interacting with our pets
-      </NewsTitle>
+    <NewsSection ref={sectionRef}>
+      <NewsContainer>
+        <NewsContent className={isVisible ? "visible" : ""}>
+          <NewsLabel>NEWS</NewsLabel>
 
-      <NewsList>
-        {articles.map((article, index) => (
-          <NewsCard
-            key={`${article.url}-${index}`}
-            onClick={() =>
-              window.open(
-                article.url,
-                "_blank",
-                "noopener,noreferrer"
-              )
-            }
-          >
-            <NewsImage
-              src={article.urlToImage}
-              alt={article.title}
-            />
+          {loading ? (
+            <>
+              <NewsTitle>Loading...</NewsTitle>
 
-            <NewsContent>
-              <NewsDescription>
-                {article.title}
-              </NewsDescription>
-            </NewsContent>
-          </NewsCard>
-        ))}
-      </NewsList>
+              <NewsText>
+                Please wait while we load the latest news.
+              </NewsText>
+            </>
+          ) : error && !currentArticle ? (
+            <>
+              <NewsTitle>Something went wrong</NewsTitle>
 
-      {hasMore && (
-        <MoreButton
-          type="button"
-          onClick={handleLoadMore}
-          disabled={loading}
+              <NewsText>
+                We couldn't load the latest news.
+              </NewsText>
+            </>
+          ) : (
+            <>
+              <NewsTitle>
+                {currentArticle?.title || "News"}
+              </NewsTitle>
+
+              <NewsText>
+                {currentArticle?.description ||
+                  "Read the latest news and interesting stories."}
+              </NewsText>
+
+              <NewsButton
+                type="button"
+                onClick={handleNext}
+                disabled={loadingMore}
+              >
+                {loadingMore ? "Loading..." : "See more"}
+
+                <FiArrowRight />
+              </NewsButton>
+            </>
+          )}
+        </NewsContent>
+
+        <NewsImageWrapper
+          className={isVisible ? "visible" : ""}
         >
-          {loading
-            ? "Loading..."
-            : "See more"}
-        </MoreButton>
-      )}
+          {currentArticle?.urlToImage && (
+            <NewsImage
+              key={currentArticle.urlToImage}
+              src={currentArticle.urlToImage}
+              alt={currentArticle.title || "News"}
+            />
+          )}
+        </NewsImageWrapper>
+      </NewsContainer>
     </NewsSection>
   );
 }
