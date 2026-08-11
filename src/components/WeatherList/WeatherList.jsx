@@ -7,6 +7,7 @@ import {
 
 import HourlyForecast from "../HourlyForecast/HourlyForecast";
 import WeeklyForecast from "../WeeklyForecast/WeeklyForecast";
+import MoreWeather from "../MoreWeather/MoreWeather";
 
 import {
   WeatherSection,
@@ -44,6 +45,9 @@ export default function WeatherList({
     useState(null);
 
   const [selectedWeeklyCity, setSelectedWeeklyCity] =
+    useState(null);
+
+  const [selectedMoreCity, setSelectedMoreCity] =
     useState(null);
 
   useEffect(() => {
@@ -127,6 +131,7 @@ export default function WeatherList({
                   onClick={() => {
                     setSelectedCity(city);
                     setSelectedWeeklyCity(null);
+                    setSelectedMoreCity(null);
                   }}
                 >
                   Hourly forecast
@@ -137,6 +142,7 @@ export default function WeatherList({
                   onClick={() => {
                     setSelectedWeeklyCity(city);
                     setSelectedCity(null);
+                    setSelectedMoreCity(null);
                   }}
                 >
                   Weekly forecast
@@ -187,7 +193,20 @@ export default function WeatherList({
                   <FiHeart />
                 </FavoriteButton>
 
-                <MoreButton type="button">
+                <MoreButton
+                  type="button"
+                  onClick={() => {
+                    setSelectedMoreCity(
+                      selectedMoreCity?.id ===
+                        city.id
+                        ? null
+                        : city
+                    );
+
+                    setSelectedCity(null);
+                    setSelectedWeeklyCity(null);
+                  }}
+                >
                   See more
                 </MoreButton>
 
@@ -219,6 +238,15 @@ export default function WeatherList({
           city={selectedWeeklyCity}
           onClose={() =>
             setSelectedWeeklyCity(null)
+          }
+        />
+      )}
+
+      {selectedMoreCity && (
+        <MoreWeather
+          city={selectedMoreCity}
+          onClose={() =>
+            setSelectedMoreCity(null)
           }
         />
       )}

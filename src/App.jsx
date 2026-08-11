@@ -6,6 +6,7 @@ import Header from "./components/Header/Header";
 import Hero from "./components/Hero/Hero";
 import WeatherList from "./components/WeatherList/WeatherList";
 import News from "./components/News/News";
+import NatureSlider from "./components/NatureSlider/NatureSlider";
 import Modal from "./components/Modal/Modal";
 import Profile from "./components/Profile/Profile";
 
@@ -300,6 +301,8 @@ export default function App() {
         />
 
         <News />
+
+        <NatureSlider />
 
         {isModalOpen && (
           <Modal
