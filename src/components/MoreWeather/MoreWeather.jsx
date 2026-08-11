@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { FiX } from "react-icons/fi";
 
-import cold from "./ice.png";
-import hot from "./hot.png";
-import ideal from "./ideal.png";
-import humidity from "./humidity.png";
-import pressure from "./pressure.png";
-import wind from "./wind.png";
-import visibility from "./visibility.png";
+import cold from "./photos/ice.png";
+import hot from "./photos/hot.png";
+import ideal from "./photos/ideal.png";
+import humidity from "./photos/humidity.png";
+import pressure from "./photos/pressure.png";
+import wind from "./photos/wind.png";
+import visibility from "./photos/visibility.png";
 
 import {
   MoreWeatherSection,

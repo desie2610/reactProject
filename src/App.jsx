@@ -7,6 +7,7 @@ import Hero from "./components/Hero/Hero";
 import WeatherList from "./components/WeatherList/WeatherList";
 import News from "./components/News/News";
 import NatureSlider from "./components/NatureSlider/NatureSlider";
+import Footer from "./components/Footer/Footer";
 import Modal from "./components/Modal/Modal";
 import Profile from "./components/Profile/Profile";
 
@@ -28,8 +29,7 @@ export default function App() {
   // Загружаем данные из localStorage
   useEffect(() => {
     const savedUser = localStorage.getItem("weatherUser");
-    const savedAvatar =
-      localStorage.getItem("weatherAvatar");
+    const savedAvatar = localStorage.getItem("weatherAvatar");
 
     const savedFavorites =
       localStorage.getItem("weatherFavorites");
@@ -303,6 +303,8 @@ export default function App() {
         <News />
 
         <NatureSlider />
+
+        <Footer />
 
         {isModalOpen && (
           <Modal
