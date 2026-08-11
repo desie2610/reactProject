@@ -191,7 +191,7 @@ export default function WeeklyForecast({
       <WeeklyHeader>
         <div>
           <WeeklyTitle>
-            8-day forecast
+            5-day forecast
           </WeeklyTitle>
 
           <WeeklyCity>
