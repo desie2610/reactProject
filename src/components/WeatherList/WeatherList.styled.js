@@ -5,7 +5,7 @@ export const WeatherSection = styled.section`
 
   padding: 45px 0 60px;
 
-  background: #ffffff;
+  background: transparent;
 
   box-sizing: border-box;
 `;

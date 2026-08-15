@@ -28,5 +28,5 @@ export const Main = styled.main`
       rgba(255, 179, 108, 0.08),
       transparent 30%
     ),
-    #ffffff;
+    transparent;
 `;

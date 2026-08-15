@@ -10,6 +10,7 @@ import NatureSlider from "./components/NatureSlider/NatureSlider";
 import Footer from "./components/Footer/Footer";
 import Modal from "./components/Modal/Modal";
 import Profile from "./components/Profile/Profile";
+import ThemeCustomizer from "./components/ThemeCustomizer/ThemeCustomizer";
 
 import { GlobalStyle } from "./GlobalStyle";
 import { AppWrapper } from "./App.styled";
@@ -25,6 +26,15 @@ export default function App() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isThemeOpen, setIsThemeOpen] = useState(false);
+
+  const [themeColors, setThemeColors] = useState([
+    {
+      id: 1,
+      color: "#ffffff",
+      percentage: 100,
+    },
+  ]);
 
   // Загружаем данные из localStorage
   useEffect(() => {
@@ -33,6 +43,9 @@ export default function App() {
 
     const savedFavorites =
       localStorage.getItem("weatherFavorites");
+
+    const savedTheme =
+      localStorage.getItem("weatherTheme");
 
     if (savedUser) {
       setUser(JSON.parse(savedUser));
@@ -50,6 +63,25 @@ export default function App() {
 
       // После перезагрузки показываем только избранные города
       setCities(parsedFavorites);
+    }
+
+    if (savedTheme) {
+      try {
+        const parsedTheme = JSON.parse(savedTheme);
+
+        if (
+          Array.isArray(parsedTheme) &&
+          parsedTheme.length > 0 &&
+          parsedTheme.length <= 4
+        ) {
+          setThemeColors(parsedTheme);
+        }
+      } catch (error) {
+        console.error(
+          "Помилка завантаження теми:",
+          error
+        );
+      }
     }
 
     setIsLoaded(true);
@@ -138,6 +170,44 @@ export default function App() {
   const closeProfile = () => {
     setIsProfileOpen(false);
   };
+
+  // Открытие настройки темы
+  const openThemeCustomizer = () => {
+    setIsThemeOpen(true);
+  };
+
+  // Закрытие настройки темы
+  const closeThemeCustomizer = () => {
+    setIsThemeOpen(false);
+  };
+
+  // Применение темы
+  const handleThemeApply = (colors) => {
+    setThemeColors(colors);
+
+    localStorage.setItem(
+      "weatherTheme",
+      JSON.stringify(colors)
+    );
+  };
+
+  // Создание градиента из цветов
+  const themeGradient = themeColors
+    .map((item, index) => {
+      const start = themeColors
+        .slice(0, index)
+        .reduce(
+          (total, current) =>
+            total + Number(current.percentage || 0),
+          0
+        );
+
+      const end =
+        start + Number(item.percentage || 0);
+
+      return `${item.color} ${start}% ${end}%`;
+    })
+    .join(", ");
 
   // Добавление города
   const handleCityAdd = (newCity) => {
@@ -282,12 +352,22 @@ export default function App() {
     <>
       <GlobalStyle />
 
-      <AppWrapper>
+      <AppWrapper
+        style={{
+          background:
+            themeColors.length === 1 &&
+            Number(themeColors[0].percentage) === 100
+              ? themeColors[0].color
+              : `linear-gradient(135deg, ${themeGradient})`,
+          transition: "background 0.4s ease",
+        }}
+      >
         <Header
           user={user}
           avatar={avatar}
           onSignUp={openSignUp}
           onProfile={openProfile}
+          onTheme={openThemeCustomizer}
         />
 
         <Hero onCityAdd={handleCityAdd} />
@@ -323,6 +403,12 @@ export default function App() {
             onLogout={handleLogout}
           />
         )}
+
+        <ThemeCustomizer
+          isOpen={isThemeOpen}
+          onClose={closeThemeCustomizer}
+          onApply={handleThemeApply}
+        />
 
         <ToastContainer
           position="top-right"

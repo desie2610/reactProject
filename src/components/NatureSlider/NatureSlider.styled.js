@@ -57,22 +57,7 @@ export const NatureSection = styled.section`
 
   overflow: hidden;
 
-  background:
-    linear-gradient(
-      120deg,
-      #f2f5f4,
-      #e4ece9,
-      #f8f8f8,
-      #e6efec,
-      #f2f5f4
-    );
-
-  background-size: 300% 300%;
-
-  animation: ${({ $visible }) =>
-    $visible
-      ? `${backgroundAnimation} 14s ease-in-out infinite`
-      : "none"};
+  background: transparent;
 
   border-top: 1px solid #ffffff;
 

@@ -14,7 +14,7 @@ export const HeroWrapper = styled.section`
   display: flex;
   justify-content: center;
 
-  background: #111111;
+  background: transparent;
 `;
 
 export const HeroBackground = styled.div`

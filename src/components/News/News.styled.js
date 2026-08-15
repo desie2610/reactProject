@@ -16,7 +16,7 @@ export const NewsSection = styled.section`
       rgba(255, 179, 108, 0.08) 22%,
       rgba(255, 179, 108, 0) 48%
     ),
-    #ffffff;
+    transparent;
 `;
 
 export const NewsContainer = styled.div`

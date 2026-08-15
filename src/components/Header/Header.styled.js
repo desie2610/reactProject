@@ -1,6 +1,11 @@
 import styled from "styled-components";
 
 export const HeaderWrapper = styled.header`
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+
   width: 100%;
   height: 82px;
   display: flex;
@@ -17,6 +22,7 @@ export const Logo = styled.a`
   display: flex;
   align-items: center;
   text-decoration: none;
+
   img {
     width: 82px;
     height: 56px;
@@ -83,6 +89,7 @@ export const SignUpButton = styled.button`
     background 0.2s ease,
     transform 0.2s ease,
     box-shadow 0.2s ease;
+
   &:hover {
     background: #ffa451;
     transform: translateY(-1px);
@@ -91,6 +98,49 @@ export const SignUpButton = styled.button`
 
   &:active {
     transform: translateY(0);
+  }
+`;
+
+export const ThemeButton = styled.button`
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: 1px solid #e7e7e7;
+  border-radius: 50%;
+
+  background: #f5f5f5;
+  color: #555555;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:hover {
+    background: #ffb36c;
+    color: #111111;
+    border-color: #ffb36c;
+    transform: translateY(-1px);
+    box-shadow: 0 5px 14px rgba(255, 179, 108, 0.25);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
   }
 `;
 

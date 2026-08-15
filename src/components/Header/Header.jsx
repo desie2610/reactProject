@@ -1,4 +1,4 @@
-import { FiUser } from "react-icons/fi";
+import { FiUser, FiFeather } from "react-icons/fi";
 import logo from "../../assets/logo.png";
 
 import {
@@ -10,6 +10,7 @@ import {
   SignUpButton,
   UserIcon,
   UserAvatar,
+  ThemeButton,
 } from "./Header.styled";
 
 export default function Header({
@@ -17,6 +18,7 @@ export default function Header({
   avatar,
   onSignUp,
   onProfile,
+  onTheme,
 }) {
   return (
     <HeaderWrapper>
@@ -39,6 +41,15 @@ export default function Header({
             Sign up
           </SignUpButton>
         )}
+
+        <ThemeButton
+          type="button"
+          onClick={onTheme}
+          aria-label="Customize background"
+          title="Customize background"
+        >
+          <FiFeather size={20} />
+        </ThemeButton>
 
         <UserIcon
           onClick={onProfile}
