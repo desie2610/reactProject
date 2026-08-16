@@ -173,3 +173,4 @@ export default function NatureSlider() {
     </NatureSection>
   );
 }
+/88888888888888/
