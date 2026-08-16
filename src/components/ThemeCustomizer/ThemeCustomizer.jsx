@@ -10,8 +10,9 @@ import {
   Description,
   ColorsList,
   ColorRow,
-  ColorPreview,
+  ColorPicker,
   ColorInput,
+  HexInput,
   PercentageWrapper,
   PercentageInput,
   PercentageSymbol,
@@ -39,12 +40,15 @@ export default function ThemeCustomizer({
   onClose,
   onApply,
 }) {
-  const [colors, setColors] = useState(DEFAULT_COLORS);
+  const [colors, setColors] = useState(
+    DEFAULT_COLORS
+  );
 
   useEffect(() => {
     if (!isOpen) return;
 
-    const savedTheme = localStorage.getItem("weatherTheme");
+    const savedTheme =
+      localStorage.getItem("weatherTheme");
 
     if (!savedTheme) {
       setColors(DEFAULT_COLORS);
@@ -52,7 +56,9 @@ export default function ThemeCustomizer({
     }
 
     try {
-      const parsedTheme = JSON.parse(savedTheme);
+      const parsedTheme = JSON.parse(
+        savedTheme
+      );
 
       if (
         Array.isArray(parsedTheme) &&
@@ -73,27 +79,68 @@ export default function ThemeCustomizer({
   }
 
   const totalPercentage = colors.reduce(
-    (total, item) => total + Number(item.percentage || 0),
+    (total, item) =>
+      total + Number(item.percentage || 0),
     0
   );
 
-  const handleColorChange = (id, value) => {
+  const isValidHex = (value) => {
+    return /^#[0-9A-Fa-f]{6}$/.test(value);
+  };
+
+  const handleColorPickerChange = (
+    id,
+    value
+  ) => {
     setColors((prevColors) =>
       prevColors.map((item) =>
         item.id === id
           ? {
               ...item,
-              color: value,
+              color: value.toUpperCase(),
             }
           : item
       )
     );
   };
 
-  const handlePercentageChange = (id, value) => {
-    let percentage = value;
+  const handleHexChange = (
+    id,
+    value
+  ) => {
+    let formattedValue = value;
 
-    if (percentage === "") {
+    if (
+      formattedValue.length > 0 &&
+      !formattedValue.startsWith("#")
+    ) {
+      formattedValue =
+        "#" + formattedValue;
+    }
+
+    formattedValue =
+      formattedValue
+        .replace(/[^#0-9A-Fa-f]/g, "")
+        .slice(0, 7);
+
+    setColors((prevColors) =>
+      prevColors.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              color:
+                formattedValue.toUpperCase(),
+            }
+          : item
+      )
+    );
+  };
+
+  const handlePercentageChange = (
+    id,
+    value
+  ) => {
+    if (value === "") {
       setColors((prevColors) =>
         prevColors.map((item) =>
           item.id === id
@@ -108,7 +155,10 @@ export default function ThemeCustomizer({
       return;
     }
 
-    percentage = Math.max(0, Math.min(100, Number(percentage)));
+    const percentage = Math.max(
+      0,
+      Math.min(100, Number(value))
+    );
 
     setColors((prevColors) =>
       prevColors.map((item) =>
@@ -131,7 +181,7 @@ export default function ThemeCustomizer({
       ...prevColors,
       {
         id: Date.now(),
-        color: "#ffb36c",
+        color: "#FFB36C",
         percentage: 0,
       },
     ]);
@@ -143,14 +193,18 @@ export default function ThemeCustomizer({
     }
 
     setColors((prevColors) =>
-      prevColors.filter((item) => item.id !== id)
+      prevColors.filter(
+        (item) => item.id !== id
+      )
     );
   };
 
   const handleReset = () => {
     setColors(DEFAULT_COLORS);
 
-    localStorage.removeItem("weatherTheme");
+    localStorage.removeItem(
+      "weatherTheme"
+    );
 
     if (onApply) {
       onApply(DEFAULT_COLORS);
@@ -158,18 +212,31 @@ export default function ThemeCustomizer({
   };
 
   const handleApply = () => {
-    if (totalPercentage !== 100) {
+    const allColorsValid = colors.every(
+      (item) => isValidHex(item.color)
+    );
+
+    if (
+      totalPercentage !== 100 ||
+      !allColorsValid
+    ) {
       return;
     }
 
-    const normalizedColors = colors.map((item) => ({
-      ...item,
-      percentage: Number(item.percentage),
-    }));
+    const normalizedColors =
+      colors.map((item) => ({
+        ...item,
+        color: item.color.toUpperCase(),
+        percentage: Number(
+          item.percentage
+        ),
+      }));
 
     localStorage.setItem(
       "weatherTheme",
-      JSON.stringify(normalizedColors)
+      JSON.stringify(
+        normalizedColors
+      )
     );
 
     if (onApply) {
@@ -181,9 +248,15 @@ export default function ThemeCustomizer({
 
   return (
     <Overlay onMouseDown={onClose}>
-      <Modal onMouseDown={(event) => event.stopPropagation()}>
+      <Modal
+        onMouseDown={(event) =>
+          event.stopPropagation()
+        }
+      >
         <ModalHeader>
-          <Title>Customize background</Title>
+          <Title>
+            Customize background
+          </Title>
 
           <CloseButton
             type="button"
@@ -195,29 +268,47 @@ export default function ThemeCustomizer({
         </ModalHeader>
 
         <Description>
-          Choose up to 4 colors and set their percentage on
-          the background.
+          Choose a color or enter your
+          own HEX code.
         </Description>
 
         <ColorsList>
           {colors.map((item, index) => (
             <ColorRow key={item.id}>
-              <ColorPreview
-                style={{
-                  background: item.color,
-                }}
-              />
+              <ColorPicker>
+                <ColorInput
+                  type="color"
+                  value={
+                    isValidHex(item.color)
+                      ? item.color
+                      : "#ffffff"
+                  }
+                  onChange={(event) =>
+                    handleColorPickerChange(
+                      item.id,
+                      event.target.value
+                    )
+                  }
+                  aria-label={`Color ${
+                    index + 1
+                  }`}
+                />
+              </ColorPicker>
 
-              <ColorInput
-                type="color"
+              <HexInput
+                type="text"
                 value={item.color}
                 onChange={(event) =>
-                  handleColorChange(
+                  handleHexChange(
                     item.id,
                     event.target.value
                   )
                 }
-                aria-label={`Color ${index + 1}`}
+                maxLength={7}
+                placeholder="#FFFFFF"
+                aria-label={`HEX color ${
+                  index + 1
+                }`}
               />
 
               <PercentageWrapper>
@@ -232,7 +323,9 @@ export default function ThemeCustomizer({
                       event.target.value
                     )
                   }
-                  aria-label={`Percentage ${index + 1}`}
+                  aria-label={`Percentage ${
+                    index + 1
+                  }`}
                 />
 
                 <PercentageSymbol>
@@ -244,7 +337,9 @@ export default function ThemeCustomizer({
                 <RemoveButton
                   type="button"
                   onClick={() =>
-                    handleRemoveColor(item.id)
+                    handleRemoveColor(
+                      item.id
+                    )
                   }
                   aria-label="Remove color"
                 >
@@ -269,7 +364,12 @@ export default function ThemeCustomizer({
           <Total>
             Total:
             <TotalValue
-              $valid={totalPercentage === 100}
+              $valid={
+                totalPercentage === 100 &&
+                colors.every((item) =>
+                  isValidHex(item.color)
+                )
+              }
             >
               {totalPercentage}%
             </TotalValue>
@@ -286,7 +386,12 @@ export default function ThemeCustomizer({
             <ApplyButton
               type="button"
               onClick={handleApply}
-              disabled={totalPercentage !== 100}
+              disabled={
+                totalPercentage !== 100 ||
+                !colors.every((item) =>
+                  isValidHex(item.color)
+                )
+              }
             >
               <FiCheck size={17} />
               Apply

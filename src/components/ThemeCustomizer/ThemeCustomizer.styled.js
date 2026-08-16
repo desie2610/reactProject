@@ -152,53 +152,42 @@ export const ColorRow = styled.div`
   &:focus-within {
     border-color: #ffb36c;
     background: #ffffff;
-    box-shadow: 0 0 0 3px rgba(255, 179, 108, 0.12);
+    box-shadow:
+      0 0 0 3px
+      rgba(255, 179, 108, 0.12);
   }
 `;
 
 export const ColorPicker = styled.div`
-  position: relative;
-
   width: 42px;
   height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   flex-shrink: 0;
 
   border-radius: 10px;
 
   overflow: hidden;
-
-  cursor: pointer;
-`;
-
-export const ColorPreview = styled.div`
-  width: 100%;
-  height: 100%;
-
-  border-radius: 10px;
-
-  border: 1px solid rgba(0, 0, 0, 0.08);
-
-  box-sizing: border-box;
 `;
 
 export const ColorInput = styled.input`
-  position: absolute;
-
-  inset: 0;
-
-  width: 100%;
-  height: 100%;
+  width: 42px;
+  height: 42px;
 
   padding: 0;
 
   border: none;
+  border-radius: 10px;
 
   background: transparent;
 
   cursor: pointer;
 
-  opacity: 0;
+  appearance: none;
+  overflow: hidden;
 
   &::-webkit-color-swatch-wrapper {
     padding: 0;
@@ -206,22 +195,51 @@ export const ColorInput = styled.input`
 
   &::-webkit-color-swatch {
     border: none;
+    border-radius: 10px;
   }
 
   &::-moz-color-swatch {
     border: none;
+    border-radius: 10px;
   }
 `;
 
-export const HexValue = styled.span`
-  min-width: 72px;
+export const HexInput = styled.input`
+  width: 100px;
+  height: 40px;
 
-  color: #666666;
+  padding: 0 12px;
 
-  font-size: 12px;
-  font-weight: 600;
+  border: 1px solid #e6e6e6;
+  border-radius: 10px;
 
-  letter-spacing: 0.3px;
+  outline: none;
+
+  background: #ffffff;
+  color: #111111;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  text-transform: uppercase;
+
+  box-sizing: border-box;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &::placeholder {
+    color: #aaaaaa;
+  }
+
+  &:focus {
+    border-color: #ffb36c;
+
+    box-shadow:
+      0 0 0 3px
+      rgba(255, 179, 108, 0.12);
+  }
 `;
 
 export const PercentageWrapper = styled.div`
@@ -258,7 +276,10 @@ export const PercentageInput = styled.input`
 
   &:focus {
     border-color: #ffb36c;
-    box-shadow: 0 0 0 3px rgba(255, 179, 108, 0.12);
+
+    box-shadow:
+      0 0 0 3px
+      rgba(255, 179, 108, 0.12);
   }
 
   &::-webkit-outer-spin-button,
@@ -319,6 +340,7 @@ export const AddColorButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+
   gap: 8px;
 
   margin-top: 14px;
@@ -413,6 +435,7 @@ export const ApplyButton = styled.button`
   display: inline-flex;
   align-items: center;
   justify-content: center;
+
   gap: 7px;
 
   padding: 0 18px;
@@ -437,7 +460,9 @@ export const ApplyButton = styled.button`
   &:hover:not(:disabled) {
     background: #ffa451;
     transform: translateY(-1px);
-    box-shadow: 0 5px 16px rgba(255, 179, 108, 0.3);
+    box-shadow:
+      0 5px 16px
+      rgba(255, 179, 108, 0.3);
   }
 
   &:active:not(:disabled) {

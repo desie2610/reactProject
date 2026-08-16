@@ -3,14 +3,16 @@ import logo from "../../assets/logo.png";
 
 import {
   HeaderWrapper,
+  HeaderBackground,
+  HeaderBlob,
   Logo,
   Navigation,
   NavLink,
   Actions,
   SignUpButton,
+  ThemeButton,
   UserIcon,
   UserAvatar,
-  ThemeButton,
 } from "./Header.styled";
 
 export default function Header({
@@ -19,17 +21,46 @@ export default function Header({
   onSignUp,
   onProfile,
   onTheme,
+  themeColors,
 }) {
   return (
     <HeaderWrapper>
+      <HeaderBackground>
+        {themeColors?.map(
+          (item, index) => (
+            <HeaderBlob
+              key={item.id}
+              $color={item.color}
+              $percentage={
+                Number(
+                  item.percentage || 0
+                )
+              }
+              $index={index}
+            />
+          )
+        )}
+      </HeaderBackground>
+
       <Logo href="/">
-        <img src={logo} alt="24 forecast" />
+        <img
+          src={logo}
+          alt="24 forecast"
+        />
       </Logo>
 
       <Navigation>
-        <NavLink href="#about">Who we are</NavLink>
-        <NavLink href="#contacts">Contacts</NavLink>
-        <NavLink href="#menu">Menu</NavLink>
+        <NavLink href="#about">
+          Who we are
+        </NavLink>
+
+        <NavLink href="#contacts">
+          Contacts
+        </NavLink>
+
+        <NavLink href="#menu">
+          Menu
+        </NavLink>
       </Navigation>
 
       <Actions>

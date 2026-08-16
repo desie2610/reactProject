@@ -12,8 +12,15 @@ import Modal from "./components/Modal/Modal";
 import Profile from "./components/Profile/Profile";
 import ThemeCustomizer from "./components/ThemeCustomizer/ThemeCustomizer";
 
-import { GlobalStyle } from "./GlobalStyle";
-import { AppWrapper } from "./App.styled";
+import {
+  GlobalStyle,
+} from "./GlobalStyle";
+
+import {
+  AppWrapper,
+  ThemeBackground,
+  ThemeBlob,
+} from "./App.styled";
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -24,25 +31,36 @@ export default function App() {
 
   const [isLoaded, setIsLoaded] = useState(false);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [isThemeOpen, setIsThemeOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] =
+    useState(false);
 
-  const [themeColors, setThemeColors] = useState([
-    {
-      id: 1,
-      color: "#ffffff",
-      percentage: 100,
-    },
-  ]);
+  const [isProfileOpen, setIsProfileOpen] =
+    useState(false);
+
+  const [isThemeOpen, setIsThemeOpen] =
+    useState(false);
+
+  const [themeColors, setThemeColors] =
+    useState([
+      {
+        id: 1,
+        color: "#ffffff",
+        percentage: 100,
+      },
+    ]);
 
   // Загружаем данные из localStorage
   useEffect(() => {
-    const savedUser = localStorage.getItem("weatherUser");
-    const savedAvatar = localStorage.getItem("weatherAvatar");
+    const savedUser =
+      localStorage.getItem("weatherUser");
+
+    const savedAvatar =
+      localStorage.getItem("weatherAvatar");
 
     const savedFavorites =
-      localStorage.getItem("weatherFavorites");
+      localStorage.getItem(
+        "weatherFavorites"
+      );
 
     const savedTheme =
       localStorage.getItem("weatherTheme");
@@ -61,13 +79,15 @@ export default function App() {
 
       setFavorites(parsedFavorites);
 
-      // После перезагрузки показываем только избранные города
+      // После перезагрузки показываем
+      // только избранные города
       setCities(parsedFavorites);
     }
 
     if (savedTheme) {
       try {
-        const parsedTheme = JSON.parse(savedTheme);
+        const parsedTheme =
+          JSON.parse(savedTheme);
 
         if (
           Array.isArray(parsedTheme) &&
@@ -107,11 +127,15 @@ export default function App() {
     setUser(userData);
     setIsModalOpen(false);
 
-    toast.success("Account created successfully!");
+    toast.success(
+      "Account created successfully!"
+    );
   };
 
   // Изменение данных профиля
-  const handleUserUpdate = (updatedUser) => {
+  const handleUserUpdate = (
+    updatedUser
+  ) => {
     localStorage.setItem(
       "weatherUser",
       JSON.stringify(updatedUser)
@@ -119,11 +143,15 @@ export default function App() {
 
     setUser(updatedUser);
 
-    toast.success("Profile updated!");
+    toast.success(
+      "Profile updated!"
+    );
   };
 
   // Изменение аватарки
-  const handleAvatarChange = (newAvatar) => {
+  const handleAvatarChange = (
+    newAvatar
+  ) => {
     localStorage.setItem(
       "weatherAvatar",
       newAvatar
@@ -131,20 +159,29 @@ export default function App() {
 
     setAvatar(newAvatar);
 
-    toast.success("Avatar updated!");
+    toast.success(
+      "Avatar updated!"
+    );
   };
 
   // Выход
   const handleLogout = () => {
-    localStorage.removeItem("weatherUser");
-    localStorage.removeItem("weatherAvatar");
+    localStorage.removeItem(
+      "weatherUser"
+    );
+
+    localStorage.removeItem(
+      "weatherAvatar"
+    );
 
     setUser(null);
     setAvatar(null);
 
     setIsProfileOpen(false);
 
-    toast.success("You have logged out.");
+    toast.success(
+      "You have logged out."
+    );
   };
 
   // Открытие регистрации
@@ -171,18 +208,20 @@ export default function App() {
     setIsProfileOpen(false);
   };
 
-  // Открытие настройки темы
+  // Открытие темы
   const openThemeCustomizer = () => {
     setIsThemeOpen(true);
   };
 
-  // Закрытие настройки темы
+  // Закрытие темы
   const closeThemeCustomizer = () => {
     setIsThemeOpen(false);
   };
 
   // Применение темы
-  const handleThemeApply = (colors) => {
+  const handleThemeApply = (
+    colors
+  ) => {
     setThemeColors(colors);
 
     localStorage.setItem(
@@ -191,33 +230,22 @@ export default function App() {
     );
   };
 
-  // Создание градиента из цветов
-  const themeGradient = themeColors
-    .map((item, index) => {
-      const start = themeColors
-        .slice(0, index)
-        .reduce(
-          (total, current) =>
-            total + Number(current.percentage || 0),
-          0
+  // Добавление города
+  const handleCityAdd = (
+    newCity
+  ) => {
+    setCities((prevCities) => {
+      const alreadyExists =
+        prevCities.some(
+          (city) =>
+            city.id === newCity.id
         );
 
-      const end =
-        start + Number(item.percentage || 0);
-
-      return `${item.color} ${start}% ${end}%`;
-    })
-    .join(", ");
-
-  // Добавление города
-  const handleCityAdd = (newCity) => {
-    setCities((prevCities) => {
-      const alreadyExists = prevCities.some(
-        (city) => city.id === newCity.id
-      );
-
       if (alreadyExists) {
-        toast.info("This city is already added.");
+        toast.info(
+          "This city is already added."
+        );
+
         return prevCities;
       }
 
@@ -225,57 +253,77 @@ export default function App() {
         `${newCity.name} added successfully!`
       );
 
-      return [...prevCities, newCity];
+      return [
+        ...prevCities,
+        newCity,
+      ];
     });
   };
 
   // Удаление города
-  const handleDeleteCity = (cityId) => {
+  const handleDeleteCity = (
+    cityId
+  ) => {
     setCities((prevCities) =>
       prevCities.filter(
-        (city) => city.id !== cityId
+        (city) =>
+          city.id !== cityId
       )
     );
 
-    setFavorites((prevFavorites) =>
-      prevFavorites.filter(
-        (city) => city.id !== cityId
-      )
+    setFavorites(
+      (prevFavorites) =>
+        prevFavorites.filter(
+          (city) =>
+            city.id !== cityId
+        )
     );
   };
 
-  // Добавление / удаление из избранного
-  const handleFavorite = (cityId) => {
+  // Добавление / удаление
+  // из избранного
+  const handleFavorite = (
+    cityId
+  ) => {
     setFavorites((prevFavorites) => {
-      const isFavorite = prevFavorites.some(
-        (city) => city.id === cityId
-      );
+      const isFavorite =
+        prevFavorites.some(
+          (city) =>
+            city.id === cityId
+        );
 
-      // Если город уже в избранном — удаляем
+      // Если город уже
+      // в избранном — удаляем
       if (isFavorite) {
         const updatedFavorites =
           prevFavorites.filter(
-            (city) => city.id !== cityId
+            (city) =>
+              city.id !== cityId
           );
 
         localStorage.setItem(
           "weatherFavorites",
-          JSON.stringify(updatedFavorites)
+          JSON.stringify(
+            updatedFavorites
+          )
         );
 
         return updatedFavorites;
       }
 
-      // Находим город среди текущих карточек
+      // Находим город
+      // среди текущих карточек
       const city = cities.find(
-        (city) => city.id === cityId
+        (city) =>
+          city.id === cityId
       );
 
       if (!city) {
         return prevFavorites;
       }
 
-      // Добавляем полный объект города в избранное
+      // Добавляем полный
+      // объект города
       const updatedFavorites = [
         ...prevFavorites,
         city,
@@ -283,7 +331,9 @@ export default function App() {
 
       localStorage.setItem(
         "weatherFavorites",
-        JSON.stringify(updatedFavorites)
+        JSON.stringify(
+          updatedFavorites
+        )
       );
 
       return updatedFavorites;
@@ -291,11 +341,14 @@ export default function App() {
   };
 
   // Обновление погоды
-  const handleRefresh = async (city) => {
+  const handleRefresh = async (
+    city
+  ) => {
     try {
-      const response = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?lat=${city.latitude}&lon=${city.longitude}&appid=${import.meta.env.VITE_OPENWEATHER_API_KEY}&units=metric`
-      );
+      const response =
+        await fetch(
+          `https://api.openweathermap.org/data/2.5/weather?lat=${city.latitude}&lon=${city.longitude}&appid=${import.meta.env.VITE_OPENWEATHER_API_KEY}&units=metric`
+        );
 
       if (!response.ok) {
         throw new Error(
@@ -303,48 +356,61 @@ export default function App() {
         );
       }
 
-      const weather = await response.json();
+      const weather =
+        await response.json();
 
       const updatedCity = {
         ...city,
 
-        temperature: weather.main.temp,
+        temperature:
+          weather.main.temp,
 
-        icon: weather.weather[0].icon,
+        icon:
+          weather.weather[0].icon,
 
         description:
-          weather.weather[0].description,
+          weather.weather[0]
+            .description,
 
-        timezone: weather.timezone,
+        timezone:
+          weather.timezone,
       };
 
       // Обновляем карточку
-      setCities((prevCities) =>
-        prevCities.map((item) =>
-          item.id === city.id
-            ? updatedCity
-            : item
-        )
+      setCities(
+        (prevCities) =>
+          prevCities.map(
+            (item) =>
+              item.id === city.id
+                ? updatedCity
+                : item
+          )
       );
 
-      // Если город избранный —
-      // обновляем его данные в избранном
-      setFavorites((prevFavorites) =>
-        prevFavorites.map((item) =>
-          item.id === city.id
-            ? updatedCity
-            : item
-        )
+      // Обновляем
+      // избранный город
+      setFavorites(
+        (prevFavorites) =>
+          prevFavorites.map(
+            (item) =>
+              item.id === city.id
+                ? updatedCity
+                : item
+          )
       );
 
-      toast.success("Weather updated!");
+      toast.success(
+        "Weather updated!"
+      );
     } catch (error) {
       console.error(
         "Помилка оновлення погоди:",
         error
       );
 
-      toast.error("Failed to update weather.");
+      toast.error(
+        "Failed to update weather."
+      );
     }
   };
 
@@ -352,25 +418,41 @@ export default function App() {
     <>
       <GlobalStyle />
 
-      <AppWrapper
-        style={{
-          background:
-            themeColors.length === 1 &&
-            Number(themeColors[0].percentage) === 100
-              ? themeColors[0].color
-              : `linear-gradient(135deg, ${themeGradient})`,
-          transition: "background 0.4s ease",
-        }}
-      >
+      <AppWrapper>
+        <ThemeBackground>
+          {themeColors.map(
+            (item, index) => (
+              <ThemeBlob
+                key={item.id}
+                $color={item.color}
+                $percentage={
+                  Number(
+                    item.percentage || 0
+                  )
+                }
+                $index={index}
+                $count={
+                  themeColors.length
+                }
+              />
+            )
+          )}
+        </ThemeBackground>
+
         <Header
           user={user}
           avatar={avatar}
           onSignUp={openSignUp}
           onProfile={openProfile}
-          onTheme={openThemeCustomizer}
+          onTheme={
+            openThemeCustomizer
+          }
+          themeColors={themeColors}
         />
 
-        <Hero onCityAdd={handleCityAdd} />
+        <Hero
+          onCityAdd={handleCityAdd}
+        />
 
         <WeatherList
           cities={cities}
@@ -398,16 +480,24 @@ export default function App() {
             user={user}
             avatar={avatar}
             onClose={closeProfile}
-            onUserUpdate={handleUserUpdate}
-            onAvatarChange={handleAvatarChange}
+            onUserUpdate={
+              handleUserUpdate
+            }
+            onAvatarChange={
+              handleAvatarChange
+            }
             onLogout={handleLogout}
           />
         )}
 
         <ThemeCustomizer
           isOpen={isThemeOpen}
-          onClose={closeThemeCustomizer}
-          onApply={handleThemeApply}
+          onClose={
+            closeThemeCustomizer
+          }
+          onApply={
+            handleThemeApply
+          }
         />
 
         <ToastContainer
