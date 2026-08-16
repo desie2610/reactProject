@@ -103,7 +103,7 @@ export const Input = styled.input`
   &:focus {
     background: #ffffff;
 
-    border-color: #ffb36c;
+    border-color: var(--theme-primary);
 
     box-shadow: 0 0 0 3px rgba(255, 179, 108, 0.15);
   }
@@ -115,7 +115,7 @@ export const SubmitButton = styled.button`
   margin-top: 6px;
   border: none;
   border-radius: 8px;
-  background: #ffb36c;
+  background: var(--theme-button-gradient);
   color: #111111;
   font-size: 15px;
   font-weight: 700;
@@ -128,7 +128,7 @@ export const SubmitButton = styled.button`
     box-shadow 0.2s ease;
 
   &:hover {
-    background: #ffa451;
+    background: var(--theme-primary-strong);
 
     transform: translateY(-1px);
 

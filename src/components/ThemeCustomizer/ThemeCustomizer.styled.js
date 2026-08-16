@@ -101,7 +101,7 @@ export const CloseButton = styled.button`
     transform 0.2s ease;
 
   &:hover {
-    background: #ffb36c;
+    background: var(--theme-button-gradient);
     color: #111111;
     transform: rotate(90deg);
   }
@@ -112,13 +112,54 @@ export const CloseButton = styled.button`
 `;
 
 export const Description = styled.p`
-  margin: 10px 0 24px;
+  margin: 10px 0 18px;
 
   color: #777777;
 
   font-size: 14px;
   font-weight: 400;
   line-height: 1.5;
+`;
+
+export const Presets = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 18px;
+`;
+
+export const PresetButton = styled.button`
+  min-height: 58px;
+  padding: 8px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid #e9e9e9;
+  border-radius: 12px;
+  background: #fafafa;
+  color: #555555;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+  &:hover { border-color: var(--theme-primary); background: var(--theme-primary-soft); transform: translateY(-2px); }
+  &:focus-visible { outline: 3px solid rgba(255, 179, 108, 0.32); outline-offset: 2px; }
+`;
+
+export const PresetSwatches = styled.span`
+  display: flex;
+  overflow: hidden;
+  width: 30px;
+  height: 14px;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px rgba(17, 17, 17, 0.08);
+`;
+
+export const PresetSwatch = styled.span`
+  flex: 1;
+  background: ${({ $color }) => $color};
 `;
 
 export const ColorsList = styled.div`
@@ -150,7 +191,7 @@ export const ColorRow = styled.div`
     background 0.2s ease;
 
   &:focus-within {
-    border-color: #ffb36c;
+    border-color: var(--theme-primary);
     background: #ffffff;
     box-shadow:
       0 0 0 3px
@@ -234,7 +275,7 @@ export const HexInput = styled.input`
   }
 
   &:focus {
-    border-color: #ffb36c;
+    border-color: var(--theme-primary);
 
     box-shadow:
       0 0 0 3px
@@ -275,7 +316,7 @@ export const PercentageInput = styled.input`
     box-shadow 0.2s ease;
 
   &:focus {
-    border-color: #ffb36c;
+    border-color: var(--theme-primary);
 
     box-shadow:
       0 0 0 3px
@@ -363,7 +404,7 @@ export const AddColorButton = styled.button`
     transform 0.2s ease;
 
   &:hover {
-    border-color: #ffb36c;
+    border-color: var(--theme-primary);
     background: #fffaf5;
     color: #111111;
   }
@@ -381,6 +422,14 @@ export const Footer = styled.div`
   gap: 16px;
 
   margin-top: 26px;
+
+  & > div:last-child { display: flex; align-items: center; }
+
+  @media (max-width: 480px) {
+    align-items: flex-start;
+    flex-direction: column;
+    & > div:last-child { width: 100%; }
+  }
 `;
 
 export const Total = styled.div`
@@ -443,7 +492,7 @@ export const ApplyButton = styled.button`
   border: none;
   border-radius: 10px;
 
-  background: #ffb36c;
+  background: var(--theme-button-gradient);
   color: #111111;
 
   font-size: 13px;
@@ -458,7 +507,7 @@ export const ApplyButton = styled.button`
     opacity 0.2s ease;
 
   &:hover:not(:disabled) {
-    background: #ffa451;
+    background: var(--theme-primary-strong);
     transform: translateY(-1px);
     box-shadow:
       0 5px 16px

@@ -98,6 +98,23 @@ export const AppWrapper = styled.div`
 
   color: #111111;
 
+  --theme-primary: ${({ $primaryColor }) => $primaryColor};
+  --theme-primary-strong: color-mix(
+    in srgb,
+    var(--theme-primary) 82%,
+    #111111
+  );
+  --theme-button-gradient: linear-gradient(
+    135deg,
+    var(--theme-primary),
+    var(--theme-primary-strong)
+  );
+  --theme-primary-soft: color-mix(
+    in srgb,
+    var(--theme-primary) 22%,
+    transparent
+  );
+
   box-sizing: border-box;
 
   overflow-x: hidden;

@@ -23,6 +23,7 @@ import {
   Loading,
   ErrorMessage,
 } from "./MoreWeather.styled";
+import { useLanguage } from "../../i18n";
 
 const API_KEY =
   import.meta.env.VITE_OPENWEATHER_API_KEY;
@@ -31,6 +32,7 @@ export default function MoreWeather({
   city,
   onClose,
 }) {
+  const { language } = useLanguage();
   const [weather, setWeather] =
     useState(null);
 
@@ -48,7 +50,7 @@ export default function MoreWeather({
 
         const weatherResponse =
           await fetch(
-            `https://api.openweathermap.org/data/2.5/weather?lat=${city.latitude}&lon=${city.longitude}&appid=${API_KEY}&units=metric`
+            `https://api.openweathermap.org/data/2.5/weather?lat=${city.latitude}&lon=${city.longitude}&appid=${API_KEY}&units=metric&lang=${language}`
           );
 
         if (!weatherResponse.ok) {
@@ -62,7 +64,7 @@ export default function MoreWeather({
 
         const forecastResponse =
           await fetch(
-            `https://api.openweathermap.org/data/2.5/forecast?lat=${city.latitude}&lon=${city.longitude}&appid=${API_KEY}&units=metric`
+            `https://api.openweathermap.org/data/2.5/forecast?lat=${city.latitude}&lon=${city.longitude}&appid=${API_KEY}&units=metric&lang=${language}`
           );
 
         if (!forecastResponse.ok) {
@@ -140,7 +142,7 @@ export default function MoreWeather({
     };
 
     loadWeather();
-  }, [city]);
+  }, [city, language]);
 
   const getTemperatureIcon = (
     temperature

@@ -246,7 +246,7 @@ export const NavLink = styled.a`
 
     border-radius: 2px;
 
-    background: #ffb36c;
+    background: var(--theme-button-gradient);
 
     transition: width 0.2s ease;
   }
@@ -279,7 +279,7 @@ export const SignUpButton = styled.button`
 
   border-radius: 9px;
 
-  background: #ffb36c;
+  background: var(--theme-button-gradient);
 
   color: #111111;
 
@@ -294,7 +294,7 @@ export const SignUpButton = styled.button`
     box-shadow 0.2s ease;
 
   &:hover {
-    background: #ffa451;
+    background: var(--theme-primary-strong);
 
     transform: translateY(-1px);
 
@@ -341,11 +341,11 @@ export const ThemeButton = styled.button`
     box-shadow 0.2s ease;
 
   &:hover {
-    background: #ffb36c;
+    background: var(--theme-button-gradient);
 
     color: #111111;
 
-    border-color: #ffb36c;
+    border-color: var(--theme-primary);
 
     transform: translateY(-1px);
 
@@ -400,11 +400,11 @@ export const UserIcon = styled.div`
     transform 0.2s ease;
 
   &:hover {
-    background: #ffb36c;
+    background: var(--theme-button-gradient);
 
     color: #111111;
 
-    border-color: #ffb36c;
+    border-color: var(--theme-primary);
 
     transform: translateY(-1px);
   }
@@ -421,4 +421,19 @@ export const UserAvatar = styled.img`
   display: block;
 
   object-fit: cover;
+`;
+
+export const LanguageSelect = styled.select`
+  height: 34px;
+  padding: 0 7px;
+  border: 1px solid rgba(17, 17, 17, 0.14);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.45);
+  color: #111111;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  outline: none;
+
+  &:focus { border-color: var(--theme-primary); }
 `;

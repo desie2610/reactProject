@@ -16,6 +16,7 @@ import {
   Loading,
   ErrorMessage,
 } from "./WeeklyForecast.styled";
+import { languageLocales, useLanguage } from "../../i18n";
 
 const API_KEY =
   import.meta.env.VITE_OPENWEATHER_API_KEY;
@@ -24,6 +25,7 @@ export default function WeeklyForecast({
   city,
   onClose,
 }) {
+  const { language } = useLanguage();
   const [forecast, setForecast] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -37,7 +39,7 @@ export default function WeeklyForecast({
         // Пытаемся получить полноценный
         // 8-дневный прогноз через One Call API
         const oneCallResponse = await fetch(
-          `https://api.openweathermap.org/data/3.0/onecall?lat=${city.latitude}&lon=${city.longitude}&exclude=current,minutely,hourly,alerts&appid=${API_KEY}&units=metric`
+          `https://api.openweathermap.org/data/3.0/onecall?lat=${city.latitude}&lon=${city.longitude}&exclude=current,minutely,hourly,alerts&appid=${API_KEY}&units=metric&lang=${language}`
         );
 
         if (oneCallResponse.ok) {
@@ -81,7 +83,7 @@ export default function WeeklyForecast({
         // используем обычный forecast
         const forecastResponse =
           await fetch(
-            `https://api.openweathermap.org/data/2.5/forecast?lat=${city.latitude}&lon=${city.longitude}&appid=${API_KEY}&units=metric`
+            `https://api.openweathermap.org/data/2.5/forecast?lat=${city.latitude}&lon=${city.longitude}&appid=${API_KEY}&units=metric&lang=${language}`
           );
 
         if (!forecastResponse.ok) {
@@ -175,11 +177,11 @@ export default function WeeklyForecast({
     };
 
     loadWeeklyForecast();
-  }, [city]);
+  }, [city, language]);
 
   // Полное название дня
   const formatDate = (date) => {
-  return date.toLocaleDateString("en-US", {
+  return date.toLocaleDateString(languageLocales[language], {
     weekday: "long",
     month: "long",
     day: "numeric",

@@ -8,6 +8,11 @@ import {
 import HourlyForecast from "../HourlyForecast/HourlyForecast";
 import WeeklyForecast from "../WeeklyForecast/WeeklyForecast";
 import MoreWeather from "../MoreWeather/MoreWeather";
+import hotBackground from "../../assets/so-hot.gif";
+import coldBackground from "../../assets/so-cold.gif";
+import rainBackground from "../../assets/rain.gif";
+import defaultBackground from "../../assets/another-day.gif";
+import { languageLocales, useLanguage } from "../../i18n";
 
 import {
   WeatherSection,
@@ -37,6 +42,7 @@ export default function WeatherList({
   onFavorite,
   onDelete,
 }) {
+  const { language, t } = useLanguage();
   const [currentTime, setCurrentTime] = useState(
     new Date()
   );
@@ -69,7 +75,7 @@ export default function WeatherList({
   };
 
   const formatTime = (date) =>
-    date.toLocaleTimeString("en-GB", {
+    date.toLocaleTimeString(languageLocales[language], {
       hour: "2-digit",
       minute: "2-digit",
       hour12: false,
@@ -90,9 +96,33 @@ export default function WeatherList({
   };
 
   const formatWeekday = (date) =>
-    date.toLocaleDateString("en-US", {
+    date.toLocaleDateString(languageLocales[language], {
       weekday: "long",
     });
+
+  const getCardBackground = (city) => {
+    const weatherCode = city.weatherCode;
+    const isRainyIcon = ["09", "10", "11"].some(
+      (code) => city.icon?.startsWith(code)
+    );
+
+    if (
+      (weatherCode >= 200 && weatherCode < 600) ||
+      isRainyIcon
+    ) {
+      return rainBackground;
+    }
+
+    if (city.temperature >= 27) {
+      return hotBackground;
+    }
+
+    if (city.temperature <= 5) {
+      return coldBackground;
+    }
+
+    return defaultBackground;
+  };
 
   if (cities.length === 0) return null;
 
@@ -110,7 +140,10 @@ export default function WeatherList({
           );
 
           return (
-            <WeatherCard key={city.id}>
+            <WeatherCard
+              key={city.id}
+              $background={getCardBackground(city)}
+            >
               <CardTop>
                 <City>
                   {city.name}
@@ -134,7 +167,7 @@ export default function WeatherList({
                     setSelectedMoreCity(null);
                   }}
                 >
-                  Hourly forecast
+                  {t("hourlyForecast")}
                 </ForecastButton>
 
                 <ForecastButton
@@ -145,7 +178,7 @@ export default function WeatherList({
                     setSelectedMoreCity(null);
                   }}
                 >
-                  Weekly forecast
+                  {t("weeklyForecast")}
                 </ForecastButton>
               </ForecastButtons>
 
@@ -207,7 +240,7 @@ export default function WeatherList({
                     setSelectedWeeklyCity(null);
                   }}
                 >
-                  See more
+                  {t("seeMore")}
                 </MoreButton>
 
                 <DeleteButton

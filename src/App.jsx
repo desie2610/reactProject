@@ -11,6 +11,7 @@ import Footer from "./components/Footer/Footer";
 import Modal from "./components/Modal/Modal";
 import Profile from "./components/Profile/Profile";
 import ThemeCustomizer from "./components/ThemeCustomizer/ThemeCustomizer";
+import { useLanguage } from "./i18n";
 
 import {
   GlobalStyle,
@@ -23,6 +24,7 @@ import {
 } from "./App.styled";
 
 export default function App() {
+  const { language } = useLanguage();
   const [user, setUser] = useState(null);
   const [avatar, setAvatar] = useState(null);
 
@@ -41,13 +43,7 @@ export default function App() {
     useState(false);
 
   const [themeColors, setThemeColors] =
-    useState([
-      {
-        id: 1,
-        color: "#ffffff",
-        percentage: 100,
-      },
-    ]);
+    useState(null);
 
   // Загружаем данные из localStorage
   useEffect(() => {
@@ -210,6 +206,11 @@ export default function App() {
 
   // Открытие темы
   const openThemeCustomizer = () => {
+    if (!user) {
+      setIsModalOpen(true);
+      return;
+    }
+
     setIsThemeOpen(true);
   };
 
@@ -224,10 +225,14 @@ export default function App() {
   ) => {
     setThemeColors(colors);
 
-    localStorage.setItem(
-      "weatherTheme",
-      JSON.stringify(colors)
-    );
+    if (colors) {
+      localStorage.setItem(
+        "weatherTheme",
+        JSON.stringify(colors)
+      );
+    } else {
+      localStorage.removeItem("weatherTheme");
+    }
   };
 
   // Добавление города
@@ -347,7 +352,7 @@ export default function App() {
     try {
       const response =
         await fetch(
-          `https://api.openweathermap.org/data/2.5/weather?lat=${city.latitude}&lon=${city.longitude}&appid=${import.meta.env.VITE_OPENWEATHER_API_KEY}&units=metric`
+          `https://api.openweathermap.org/data/2.5/weather?lat=${city.latitude}&lon=${city.longitude}&appid=${import.meta.env.VITE_OPENWEATHER_API_KEY}&units=metric&lang=${language}`
         );
 
       if (!response.ok) {
@@ -371,6 +376,9 @@ export default function App() {
         description:
           weather.weather[0]
             .description,
+
+        weatherCode:
+          weather.weather[0].id,
 
         timezone:
           weather.timezone,
@@ -418,9 +426,11 @@ export default function App() {
     <>
       <GlobalStyle />
 
-      <AppWrapper>
+      <AppWrapper
+        $primaryColor={themeColors?.[0]?.color || "#FFB36C"}
+      >
         <ThemeBackground>
-          {themeColors.map(
+          {(themeColors || []).map(
             (item, index) => (
               <ThemeBlob
                 key={item.id}
@@ -452,6 +462,8 @@ export default function App() {
 
         <Hero
           onCityAdd={handleCityAdd}
+          user={user}
+          onRequireAuth={openSignUp}
         />
 
         <WeatherList
@@ -466,7 +478,7 @@ export default function App() {
 
         <NatureSlider />
 
-        <Footer />
+        <Footer themeColors={themeColors} />
 
         {isModalOpen && (
           <Modal

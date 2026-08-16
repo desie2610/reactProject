@@ -98,7 +98,7 @@ export const AvatarPlaceholder = styled.div`
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: #ffb36c;
+  background: var(--theme-button-gradient);
   color: #111111;
   font-size: 44px;
   font-weight: 800;
@@ -116,7 +116,7 @@ export const UploadButton = styled.label`
   justify-content: center;
   border: 3px solid #ffffff;
   border-radius: 50%;
-  background: #ffb36c;
+  background: var(--theme-button-gradient);
   color: #111111;
   cursor: pointer;
 
@@ -127,7 +127,7 @@ export const UploadButton = styled.label`
     transform 0.2s ease;
 
   &:hover {
-    background: #ffa451;
+    background: var(--theme-primary-strong);
 
     transform: scale(1.08);
   }
@@ -192,7 +192,7 @@ export const EditInput = styled.input`
     box-shadow 0.2s ease;
 
   &:focus {
-    border-color: #ffb36c;
+    border-color: var(--theme-primary);
 
     box-shadow: 0 0 0 3px rgba(255, 179, 108, 0.15);
   }
@@ -208,7 +208,7 @@ export const EditButton = styled.button`
   gap: 8px;
   border: none;
   border-radius: 8px;
-  background: #ffb36c;
+  background: var(--theme-button-gradient);
   color: #111111;
   font-size: 15px;
   font-weight: 700;
@@ -219,7 +219,7 @@ export const EditButton = styled.button`
     transform 0.2s ease;
 
   &:hover {
-    background: #ffa451;
+    background: var(--theme-primary-strong);
 
     transform: translateY(-1px);
   }
@@ -235,7 +235,7 @@ export const SaveButton = styled.button`
   gap: 8px;
   border: none;
   border-radius: 8px;
-  background: #ffb36c;
+  background: var(--theme-button-gradient);
   color: #111111;
   font-size: 15px;
   font-weight: 700;
@@ -246,7 +246,7 @@ export const SaveButton = styled.button`
     transform 0.2s ease;
 
   &:hover {
-    background: #ffa451;
+    background: var(--theme-primary-strong);
 
     transform: translateY(-1px);
   }

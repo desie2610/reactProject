@@ -55,7 +55,16 @@ export const WeatherCard = styled.article`
 
   border-radius: 18px;
 
-  background: #e9e9e9;
+  background-color: #e9e9e9;
+  background-image:
+    linear-gradient(
+      rgba(255, 255, 255, 0.34),
+      rgba(255, 255, 255, 0.34)
+    ),
+    url(${({ $background }) => $background});
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 `;
 
 export const CardTop = styled.div`
@@ -115,7 +124,7 @@ export const ForecastButton = styled.button`
   border: none;
   border-radius: 11px;
 
-  background: #ffb36c;
+  background: var(--theme-button-gradient);
   color: #111111;
 
   font-size: 12px;
@@ -128,7 +137,7 @@ export const ForecastButton = styled.button`
     transform 0.2s ease;
 
   &:hover {
-    background: #ffa451;
+    background: var(--theme-primary-strong);
   }
 
   &:active {
@@ -259,7 +268,7 @@ export const MoreButton = styled.button`
   border: none;
   border-radius: 11px;
 
-  background: #ffb36c;
+  background: var(--theme-button-gradient);
   color: #111111;
 
   font-size: 12px;
@@ -272,7 +281,7 @@ export const MoreButton = styled.button`
     transform 0.2s ease;
 
   &:hover {
-    background: #ffa451;
+    background: var(--theme-primary-strong);
   }
 
   &:active {

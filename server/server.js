@@ -26,6 +26,10 @@ app.get("/", (req, res) => {
 app.get("/api/news", async (req, res) => {
   try {
     const page = Number(req.query.page) || 1;
+    const supportedLanguages = ["en", "es", "de"];
+    const language = supportedLanguages.includes(req.query.lang)
+      ? req.query.lang
+      : "en";
 
     const apiKey = process.env.NEWS_API_KEY;
 
@@ -39,7 +43,7 @@ app.get("/api/news", async (req, res) => {
     const url =
       "https://newsapi.org/v2/everything" +
       "?q=pets%20OR%20animals" +
-      "&language=en" +
+      `&language=${language}` +
       "&sortBy=publishedAt" +
       "&pageSize=4" +
       `&page=${page}` +

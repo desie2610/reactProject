@@ -185,7 +185,7 @@ export const SearchButton = styled.button`
 
   border: none;
 
-  background: #ffb36c;
+  background: var(--theme-button-gradient);
   color: #111111;
 
   cursor: pointer;
@@ -195,7 +195,7 @@ export const SearchButton = styled.button`
     transform 0.2s ease;
 
   &:hover {
-    background: #ffa451;
+    background: var(--theme-primary-strong);
   }
 
   &:active {

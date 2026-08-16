@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
+import { useLanguage } from "../../i18n";
 
 import {
   NewsSection,
@@ -18,6 +19,7 @@ import {
 const API_URL = "https://reactproject-gsav.onrender.com/api/news";
 
 export default function News() {
+  const { language } = useLanguage();
   const [articles, setArticles] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -63,7 +65,7 @@ export default function News() {
       setError(false);
 
       const response = await fetch(
-        `${API_URL}?page=${pageNumber}`
+        `${API_URL}?page=${pageNumber}&lang=${language === "uk" ? "en" : language}`
       );
 
       if (!response.ok) {
@@ -81,6 +83,10 @@ export default function News() {
       }
 
       setArticles((previousArticles) => {
+        if (pageNumber === 1) {
+          return data.articles;
+        }
+
         const existingUrls = new Set(
           previousArticles.map((article) => article.url)
         );
@@ -124,7 +130,7 @@ export default function News() {
   // Первая загрузка
   useEffect(() => {
     loadNews(1);
-  }, []);
+  }, [language]);
 
   // Следующая новость
   const handleNext = async () => {
@@ -145,7 +151,7 @@ export default function News() {
       setLoadingMore(true);
 
       const response = await fetch(
-        `${API_URL}?page=${nextPage}`
+        `${API_URL}?page=${nextPage}&lang=${language === "uk" ? "en" : language}`
       );
 
       if (!response.ok) {

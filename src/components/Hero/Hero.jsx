@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { FiSearch } from "react-icons/fi";
 
 import heroBg from "../../assets/weather.png";
+import { languageLocales, useLanguage } from "../../i18n";
 
 import {
   HeroWrapper,
@@ -19,7 +20,12 @@ import {
 
 const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY;
 
-export default function Hero({ onCityAdd }) {
+export default function Hero({
+  onCityAdd,
+  user,
+  onRequireAuth,
+}) {
+  const { language, t } = useLanguage();
   const [query, setQuery] = useState("");
 
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -33,6 +39,11 @@ export default function Hero({ onCityAdd }) {
   }, []);
 
   const searchLocation = async () => {
+    if (!user) {
+      onRequireAuth?.();
+      return;
+    }
+
     const value = query.trim();
 
     if (!value) {
@@ -44,7 +55,7 @@ export default function Hero({ onCityAdd }) {
       const response = await fetch(
         `https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(
           value
-        )}&limit=1&appid=${API_KEY}`
+        )}&limit=1&appid=${API_KEY}&lang=${language}`
       );
 
       if (!response.ok) {
@@ -63,7 +74,7 @@ export default function Hero({ onCityAdd }) {
       const location = data[0];
 
       const weatherResponse = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?lat=${location.lat}&lon=${location.lon}&appid=${API_KEY}&units=metric`
+        `https://api.openweathermap.org/data/2.5/weather?lat=${location.lat}&lon=${location.lon}&appid=${API_KEY}&units=metric&lang=${language}`
       );
 
       if (!weatherResponse.ok) {
@@ -87,6 +98,8 @@ export default function Hero({ onCityAdd }) {
         icon: weather.weather[0].icon,
 
         description: weather.weather[0].description,
+
+        weatherCode: weather.weather[0].id,
 
         timezone: weather.timezone,
 
@@ -113,13 +126,13 @@ export default function Hero({ onCityAdd }) {
 
   const currentDate = new Date();
 
-  const month = currentDate.toLocaleString("en-US", {
+  const month = currentDate.toLocaleString(languageLocales[language], {
     month: "long",
   });
 
   const year = currentDate.getFullYear();
 
-  const weekday = currentDate.toLocaleString("en-US", {
+  const weekday = currentDate.toLocaleString(languageLocales[language], {
     weekday: "long",
   });
 
@@ -160,15 +173,11 @@ export default function Hero({ onCityAdd }) {
       />
 
       <HeroContent>
-        <Title>Weather dashboard</Title>
+        <Title>{t("weatherDashboard")}</Title>
 
         <Info>
           <Description>
-            Create your personal list of
-            <br />
-            favorite cities and always be
-            <br />
-            aware of the weather.
+            {t("heroDescription")}
           </Description>
 
           <Divider />
@@ -190,7 +199,7 @@ export default function Hero({ onCityAdd }) {
             onChange={(event) =>
               setQuery(event.target.value)
             }
-            placeholder="Search location..."
+            placeholder={t("searchLocation")}
           />
 
           <SearchButton type="submit">

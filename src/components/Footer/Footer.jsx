@@ -1,3 +1,5 @@
+import { FiArrowUp, FiMapPin } from "react-icons/fi";
+
 import {
   FooterWrapper,
   FooterContainer,
@@ -11,35 +13,44 @@ import {
   SocialIcon,
   BottomLine,
   Copyright,
+  FooterLink,
+  BackToTopButton,
 } from "./Footer.styled";
 
 import logo from "./photos/qwerty.png";
 import instagram from "./photos/instagram.png";
 import facebook from "./photos/facebook.png";
 import whatsapp from "./photos/whatsapp.png";
+import { useLanguage } from "../../i18n";
 
-export default function Footer() {
+export default function Footer({ themeColors }) {
+  const { t } = useLanguage();
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
-    <FooterWrapper>
+    <FooterWrapper id="contacts" $themeColors={themeColors}>
       <FooterContainer>
         <LogoWrapper>
           <Logo src={logo} alt="247 forecast" />
         </LogoWrapper>
 
         <InfoBlock>
-          <Title>Address</Title>
+          <Title>{t("address")}</Title>
 
           <Address>
-            Svobody str. 35
-            <br />
-            Kyiv
-            <br />
-            Ukraine
+            <FiMapPin aria-hidden="true" />
+            <span>
+              Svobody str. 35
+              <br />
+              Kyiv, Ukraine
+            </span>
           </Address>
         </InfoBlock>
 
         <InfoBlock>
-          <Title>Contact us</Title>
+          <Title>{t("contactUs")}</Title>
 
           <Socials>
             <SocialLink
@@ -73,6 +84,10 @@ export default function Footer() {
         <Copyright>
           © 2025 <span>247 forecast</span>. All rights reserved.
         </Copyright>
+        <FooterLink href="#about">{t("aboutUs")}</FooterLink>
+        <BackToTopButton type="button" onClick={scrollToTop} aria-label="Back to top" title="Back to top">
+          <FiArrowUp size={17} />
+        </BackToTopButton>
       </BottomLine>
     </FooterWrapper>
   );

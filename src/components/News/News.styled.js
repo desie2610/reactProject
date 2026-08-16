@@ -148,7 +148,7 @@ export const NewsButton = styled.button`
     opacity 0.25s ease;
 
   &:hover {
-    background: #ffb36c;
+    background: var(--theme-primary);
 
     color: #111111;
 

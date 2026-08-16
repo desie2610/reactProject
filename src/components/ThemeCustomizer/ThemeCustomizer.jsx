@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { FiPlus, FiX, FiCheck } from "react-icons/fi";
+import { useLanguage } from "../../i18n";
 
 import {
   Overlay,
@@ -18,6 +19,10 @@ import {
   PercentageSymbol,
   RemoveButton,
   AddColorButton,
+  Presets,
+  PresetButton,
+  PresetSwatches,
+  PresetSwatch,
   Footer,
   Total,
   TotalValue,
@@ -35,14 +40,25 @@ const DEFAULT_COLORS = [
   },
 ];
 
+const THEME_PRESETS = [
+  { name: "default", colors: DEFAULT_COLORS },
+  { name: "Sunset", colors: [{ id: 1, color: "#FFD6A5", percentage: 55 }, { id: 2, color: "#FF9E80", percentage: 45 }] },
+  { name: "Ocean", colors: [{ id: 1, color: "#BDE0FE", percentage: 60 }, { id: 2, color: "#CDB4DB", percentage: 40 }] },
+  { name: "Nature", colors: [{ id: 1, color: "#D8F3DC", percentage: 65 }, { id: 2, color: "#B7E4C7", percentage: 35 }] },
+];
+
 export default function ThemeCustomizer({
   isOpen,
   onClose,
   onApply,
 }) {
+  const { t } = useLanguage();
   const [colors, setColors] = useState(
     DEFAULT_COLORS
   );
+
+  const [isDefaultSelected, setIsDefaultSelected] =
+    useState(true);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -52,6 +68,7 @@ export default function ThemeCustomizer({
 
     if (!savedTheme) {
       setColors(DEFAULT_COLORS);
+      setIsDefaultSelected(true);
       return;
     }
 
@@ -66,11 +83,14 @@ export default function ThemeCustomizer({
         parsedTheme.length <= MAX_COLORS
       ) {
         setColors(parsedTheme);
+        setIsDefaultSelected(false);
       } else {
         setColors(DEFAULT_COLORS);
+        setIsDefaultSelected(true);
       }
     } catch {
       setColors(DEFAULT_COLORS);
+      setIsDefaultSelected(true);
     }
   }, [isOpen]);
 
@@ -92,6 +112,8 @@ export default function ThemeCustomizer({
     id,
     value
   ) => {
+    setIsDefaultSelected(false);
+
     setColors((prevColors) =>
       prevColors.map((item) =>
         item.id === id
@@ -108,6 +130,8 @@ export default function ThemeCustomizer({
     id,
     value
   ) => {
+    setIsDefaultSelected(false);
+
     let formattedValue = value;
 
     if (
@@ -140,6 +164,8 @@ export default function ThemeCustomizer({
     id,
     value
   ) => {
+    setIsDefaultSelected(false);
+
     if (value === "") {
       setColors((prevColors) =>
         prevColors.map((item) =>
@@ -177,6 +203,8 @@ export default function ThemeCustomizer({
       return;
     }
 
+    setIsDefaultSelected(false);
+
     setColors((prevColors) => [
       ...prevColors,
       {
@@ -192,6 +220,8 @@ export default function ThemeCustomizer({
       return;
     }
 
+    setIsDefaultSelected(false);
+
     setColors((prevColors) =>
       prevColors.filter(
         (item) => item.id !== id
@@ -199,19 +229,33 @@ export default function ThemeCustomizer({
     );
   };
 
+  const handlePreset = (preset) => {
+    setIsDefaultSelected(false);
+
+    setColors(preset.colors.map((item, index) => ({ ...item, id: Date.now() + index })));
+  };
+
   const handleReset = () => {
     setColors(DEFAULT_COLORS);
+    setIsDefaultSelected(true);
 
     localStorage.removeItem(
       "weatherTheme"
     );
 
     if (onApply) {
-      onApply(DEFAULT_COLORS);
+      onApply(null);
     }
   };
 
   const handleApply = () => {
+    if (isDefaultSelected) {
+      localStorage.removeItem("weatherTheme");
+      onApply?.(null);
+      onClose();
+      return;
+    }
+
     const allColorsValid = colors.every(
       (item) => isValidHex(item.color)
     );
@@ -255,7 +299,7 @@ export default function ThemeCustomizer({
       >
         <ModalHeader>
           <Title>
-            Customize background
+            {t("customizeTitle")}
           </Title>
 
           <CloseButton
@@ -268,9 +312,27 @@ export default function ThemeCustomizer({
         </ModalHeader>
 
         <Description>
-          Choose a color or enter your
-          own HEX code.
+          {t("customizeDescription")}
         </Description>
+
+        <Presets aria-label="Theme presets">
+          {THEME_PRESETS.map((preset) => (
+            <PresetButton
+              key={preset.name}
+              type="button"
+              onClick={() =>
+                preset.name === "default"
+                  ? handleReset()
+                  : handlePreset(preset)
+              }
+            >
+              <PresetSwatches>
+                {preset.colors.map((item) => <PresetSwatch key={item.color} $color={item.color} />)}
+              </PresetSwatches>
+              {preset.name === "default" ? t("default") : preset.name}
+            </PresetButton>
+          ))}
+        </Presets>
 
         <ColorsList>
           {colors.map((item, index) => (
@@ -356,13 +418,13 @@ export default function ThemeCustomizer({
             onClick={handleAddColor}
           >
             <FiPlus size={18} />
-            Add color
+            {t("addColor")}
           </AddColorButton>
         )}
 
         <Footer>
           <Total>
-            Total:
+            {t("total")}
             <TotalValue
               $valid={
                 totalPercentage === 100 &&
@@ -380,7 +442,7 @@ export default function ThemeCustomizer({
               type="button"
               onClick={handleReset}
             >
-              Reset
+              {t("reset")}
             </ResetButton>
 
             <ApplyButton
@@ -394,7 +456,7 @@ export default function ThemeCustomizer({
               }
             >
               <FiCheck size={17} />
-              Apply
+              {t("apply")}
             </ApplyButton>
           </div>
         </Footer>

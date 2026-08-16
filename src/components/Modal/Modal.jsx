@@ -1,6 +1,7 @@
 import { useFormik } from "formik";
 import { FiX } from "react-icons/fi";
 import { toast } from "react-toastify";
+import { useLanguage } from "../../i18n";
 
 import {
   Overlay,
@@ -15,6 +16,7 @@ import {
 } from "./Modal.styled";
 
 export default function Modal({ onClose, onSubmit }) {
+  const { t } = useLanguage();
   const formik = useFormik({
     initialValues: {
       username: "",
@@ -56,13 +58,13 @@ export default function Modal({ onClose, onSubmit }) {
           <FiX size={24} />
         </CloseButton>
 
-        <Title>Sign up</Title>
+        <Title>{t("signUp")}</Title>
 
         <Form onSubmit={formik.handleSubmit}>
           <Input
             type="text"
             name="username"
-            placeholder="Username"
+            placeholder={t("username")}
             value={formik.values.username}
             onChange={formik.handleChange}
             required
@@ -71,7 +73,7 @@ export default function Modal({ onClose, onSubmit }) {
           <Input
             type="email"
             name="email"
-            placeholder="E-Mail"
+            placeholder={t("email")}
             value={formik.values.email}
             onChange={formik.handleChange}
             required
@@ -80,21 +82,21 @@ export default function Modal({ onClose, onSubmit }) {
           <Input
             type="password"
             name="password"
-            placeholder="Password"
+            placeholder={t("password")}
             value={formik.values.password}
             onChange={formik.handleChange}
             required
           />
 
           <SubmitButton type="submit">
-            Sign up
+            {t("signUp")}
           </SubmitButton>
         </Form>
 
         <LoginText>
-          Already have an account?{" "}
+          {t("alreadyHaveAccount")} {" "}
           <LoginLink href="#login">
-            Log In
+            {t("logIn")}
           </LoginLink>
         </LoginText>
       </ModalWrapper>
