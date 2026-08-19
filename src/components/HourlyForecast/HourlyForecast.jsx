@@ -19,7 +19,6 @@ import {
   ForecastLoading,
   ForecastError,
 } from "./HourlyForecast.styled";
-import { languageLocales, useLanguage } from "../../i18n";
 
 Chart.register(
   LineController,
@@ -36,7 +35,6 @@ export default function HourlyForecast({
   city,
   onClose,
 }) {
-  const { language } = useLanguage();
   const canvasRef = useRef(null);
   const chartRef = useRef(null);
 
@@ -51,7 +49,7 @@ export default function HourlyForecast({
         setError(false);
 
         const response = await fetch(
-          `https://api.openweathermap.org/data/2.5/forecast?lat=${city.latitude}&lon=${city.longitude}&appid=${API_KEY}&units=metric&lang=${language}`
+          `https://api.openweathermap.org/data/2.5/forecast?lat=${city.latitude}&lon=${city.longitude}&appid=${API_KEY}&units=metric`
         );
 
         if (!response.ok) {
@@ -85,7 +83,7 @@ export default function HourlyForecast({
     };
 
     loadForecast();
-  }, [city, language]);
+  }, [city]);
 
   useEffect(() => {
     if (
@@ -105,7 +103,7 @@ export default function HourlyForecast({
     const labels = forecast.map((item) => {
       const date = new Date(item.dt * 1000);
 
-      return date.toLocaleTimeString(languageLocales[language], {
+      return date.toLocaleTimeString("en-US", {
         hour: "numeric",
         hour12: true,
       });

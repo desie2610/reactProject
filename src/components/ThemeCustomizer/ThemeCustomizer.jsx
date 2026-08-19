@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { FiPlus, FiX, FiCheck } from "react-icons/fi";
-import { useLanguage } from "../../i18n";
 
 import {
   Overlay,
@@ -52,7 +51,6 @@ export default function ThemeCustomizer({
   onClose,
   onApply,
 }) {
-  const { t } = useLanguage();
   const [colors, setColors] = useState(
     DEFAULT_COLORS
   );
@@ -299,7 +297,7 @@ export default function ThemeCustomizer({
       >
         <ModalHeader>
           <Title>
-            {t("customizeTitle")}
+            Customize background
           </Title>
 
           <CloseButton
@@ -312,7 +310,7 @@ export default function ThemeCustomizer({
         </ModalHeader>
 
         <Description>
-          {t("customizeDescription")}
+          Choose a color or enter your own HEX code.
         </Description>
 
         <Presets aria-label="Theme presets">
@@ -329,7 +327,7 @@ export default function ThemeCustomizer({
               <PresetSwatches>
                 {preset.colors.map((item) => <PresetSwatch key={item.color} $color={item.color} />)}
               </PresetSwatches>
-              {preset.name === "default" ? t("default") : preset.name}
+              {preset.name === "default" ? "Default" : preset.name}
             </PresetButton>
           ))}
         </Presets>
@@ -418,13 +416,13 @@ export default function ThemeCustomizer({
             onClick={handleAddColor}
           >
             <FiPlus size={18} />
-            {t("addColor")}
+            Add color
           </AddColorButton>
         )}
 
         <Footer>
           <Total>
-            {t("total")}
+            Total:
             <TotalValue
               $valid={
                 totalPercentage === 100 &&
@@ -442,7 +440,7 @@ export default function ThemeCustomizer({
               type="button"
               onClick={handleReset}
             >
-              {t("reset")}
+              Reset
             </ResetButton>
 
             <ApplyButton
@@ -456,7 +454,7 @@ export default function ThemeCustomizer({
               }
             >
               <FiCheck size={17} />
-              {t("apply")}
+              Apply
             </ApplyButton>
           </div>
         </Footer>

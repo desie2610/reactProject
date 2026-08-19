@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useLanguage } from "../../i18n";
 
 import {
   NatureSection,
@@ -14,7 +13,6 @@ const API_KEY =
   import.meta.env.VITE_PIXABAY_API_KEY;
 
 export default function NatureSlider() {
-  const { language } = useLanguage();
   const [images, setImages] = useState([]);
   const [activeIndex, setActiveIndex] =
     useState(2);
@@ -32,7 +30,7 @@ export default function NatureSlider() {
         setError(false);
 
         const response = await fetch(
-          `https://pixabay.com/api/?key=${API_KEY}&q=beautiful+nature&lang=${language === "uk" ? "en" : language}&image_type=photo&orientation=horizontal&per_page=7&safesearch=true`
+          `https://pixabay.com/api/?key=${API_KEY}&q=beautiful+nature&lang=en&image_type=photo&orientation=horizontal&per_page=7&safesearch=true`
         );
 
         if (!response.ok) {
@@ -76,7 +74,7 @@ export default function NatureSlider() {
     };
 
     loadNatureImages();
-  }, [language]);
+  }, []);
 
   useEffect(() => {
     if (images.length === 0) {

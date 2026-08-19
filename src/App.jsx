@@ -11,7 +11,6 @@ import Footer from "./components/Footer/Footer";
 import Modal from "./components/Modal/Modal";
 import Profile from "./components/Profile/Profile";
 import ThemeCustomizer from "./components/ThemeCustomizer/ThemeCustomizer";
-import { useLanguage } from "./i18n";
 
 import {
   GlobalStyle,
@@ -24,7 +23,6 @@ import {
 } from "./App.styled";
 
 export default function App() {
-  const { language } = useLanguage();
   const [user, setUser] = useState(null);
   const [avatar, setAvatar] = useState(null);
 
@@ -352,7 +350,7 @@ export default function App() {
     try {
       const response =
         await fetch(
-          `https://api.openweathermap.org/data/2.5/weather?lat=${city.latitude}&lon=${city.longitude}&appid=${import.meta.env.VITE_OPENWEATHER_API_KEY}&units=metric&lang=${language}`
+          `https://api.openweathermap.org/data/2.5/weather?lat=${city.latitude}&lon=${city.longitude}&appid=${import.meta.env.VITE_OPENWEATHER_API_KEY}&units=metric`
         );
 
       if (!response.ok) {

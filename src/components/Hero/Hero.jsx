@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { FiSearch } from "react-icons/fi";
 
 import heroBg from "../../assets/weather.png";
-import { languageLocales, useLanguage } from "../../i18n";
 
 import {
   HeroWrapper,
@@ -25,7 +24,6 @@ export default function Hero({
   user,
   onRequireAuth,
 }) {
-  const { language, t } = useLanguage();
   const [query, setQuery] = useState("");
 
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -55,7 +53,7 @@ export default function Hero({
       const response = await fetch(
         `https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(
           value
-        )}&limit=1&appid=${API_KEY}&lang=${language}`
+        )}&limit=1&appid=${API_KEY}`
       );
 
       if (!response.ok) {
@@ -74,7 +72,7 @@ export default function Hero({
       const location = data[0];
 
       const weatherResponse = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?lat=${location.lat}&lon=${location.lon}&appid=${API_KEY}&units=metric&lang=${language}`
+        `https://api.openweathermap.org/data/2.5/weather?lat=${location.lat}&lon=${location.lon}&appid=${API_KEY}&units=metric`
       );
 
       if (!weatherResponse.ok) {
@@ -126,13 +124,13 @@ export default function Hero({
 
   const currentDate = new Date();
 
-  const month = currentDate.toLocaleString(languageLocales[language], {
+  const month = currentDate.toLocaleString("en-US", {
     month: "long",
   });
 
   const year = currentDate.getFullYear();
 
-  const weekday = currentDate.toLocaleString(languageLocales[language], {
+  const weekday = currentDate.toLocaleString("en-US", {
     weekday: "long",
   });
 
@@ -173,11 +171,11 @@ export default function Hero({
       />
 
       <HeroContent>
-        <Title>{t("weatherDashboard")}</Title>
+        <Title>Weather dashboard</Title>
 
         <Info>
           <Description>
-            {t("heroDescription")}
+            Create your personal list of favorite cities and always be aware of the weather.
           </Description>
 
           <Divider />
@@ -199,7 +197,7 @@ export default function Hero({
             onChange={(event) =>
               setQuery(event.target.value)
             }
-            placeholder={t("searchLocation")}
+            placeholder="Search location..."
           />
 
           <SearchButton type="submit">

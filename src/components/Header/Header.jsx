@@ -1,6 +1,5 @@
 import { FiUser, FiFeather } from "react-icons/fi";
 import logo from "../../assets/logo.png";
-import { useLanguage } from "../../i18n";
 
 import {
   HeaderWrapper,
@@ -14,7 +13,6 @@ import {
   ThemeButton,
   UserIcon,
   UserAvatar,
-  LanguageSelect,
 } from "./Header.styled";
 
 export default function Header({
@@ -25,7 +23,6 @@ export default function Header({
   onTheme,
   themeColors,
 }) {
-  const { language, changeLanguage, t } = useLanguage();
 
   return (
     <HeaderWrapper>
@@ -55,15 +52,15 @@ export default function Header({
 
       <Navigation>
         <NavLink href="#about">
-          {t("whoWeAre")}
+          Who we are
         </NavLink>
 
         <NavLink href="#contacts">
-          {t("contacts")}
+          Contacts
         </NavLink>
 
         <NavLink href="#menu">
-          {t("menu")}
+          Menu
         </NavLink>
       </Navigation>
 
@@ -73,22 +70,15 @@ export default function Header({
             type="button"
             onClick={onSignUp}
           >
-            {t("signUp")}
+            Sign up
           </SignUpButton>
         )}
-
-        <LanguageSelect value={language} onChange={(event) => changeLanguage(event.target.value)} aria-label="Language">
-          <option value="en">EN</option>
-          <option value="uk">UA</option>
-          <option value="es">ES</option>
-          <option value="de">DE</option>
-        </LanguageSelect>
 
         <ThemeButton
           type="button"
           onClick={onTheme}
-          aria-label={t("customizeBackground")}
-          title={t("customizeBackground")}
+          aria-label="Customize background"
+          title="Customize background"
         >
           <FiFeather size={20} />
         </ThemeButton>

@@ -21,10 +21,8 @@ import logo from "./photos/qwerty.png";
 import instagram from "./photos/instagram.png";
 import facebook from "./photos/facebook.png";
 import whatsapp from "./photos/whatsapp.png";
-import { useLanguage } from "../../i18n";
 
 export default function Footer({ themeColors }) {
-  const { t } = useLanguage();
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -37,7 +35,7 @@ export default function Footer({ themeColors }) {
         </LogoWrapper>
 
         <InfoBlock>
-          <Title>{t("address")}</Title>
+          <Title>Address</Title>
 
           <Address>
             <FiMapPin aria-hidden="true" />
@@ -50,7 +48,7 @@ export default function Footer({ themeColors }) {
         </InfoBlock>
 
         <InfoBlock>
-          <Title>{t("contactUs")}</Title>
+          <Title>Contact us</Title>
 
           <Socials>
             <SocialLink
@@ -84,7 +82,7 @@ export default function Footer({ themeColors }) {
         <Copyright>
           © 2025 <span>247 forecast</span>. All rights reserved.
         </Copyright>
-        <FooterLink href="#about">{t("aboutUs")}</FooterLink>
+        <FooterLink href="#about">About us</FooterLink>
         <BackToTopButton type="button" onClick={scrollToTop} aria-label="Back to top" title="Back to top">
           <FiArrowUp size={17} />
         </BackToTopButton>

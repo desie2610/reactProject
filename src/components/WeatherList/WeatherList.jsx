@@ -12,7 +12,6 @@ import hotBackground from "../../assets/so-hot.gif";
 import coldBackground from "../../assets/so-cold.gif";
 import rainBackground from "../../assets/rain.gif";
 import defaultBackground from "../../assets/another-day.gif";
-import { languageLocales, useLanguage } from "../../i18n";
 
 import {
   WeatherSection,
@@ -42,7 +41,6 @@ export default function WeatherList({
   onFavorite,
   onDelete,
 }) {
-  const { language, t } = useLanguage();
   const [currentTime, setCurrentTime] = useState(
     new Date()
   );
@@ -75,7 +73,7 @@ export default function WeatherList({
   };
 
   const formatTime = (date) =>
-    date.toLocaleTimeString(languageLocales[language], {
+    date.toLocaleTimeString("en-US", {
       hour: "2-digit",
       minute: "2-digit",
       hour12: false,
@@ -96,7 +94,7 @@ export default function WeatherList({
   };
 
   const formatWeekday = (date) =>
-    date.toLocaleDateString(languageLocales[language], {
+    date.toLocaleDateString("en-US", {
       weekday: "long",
     });
 
@@ -167,7 +165,7 @@ export default function WeatherList({
                     setSelectedMoreCity(null);
                   }}
                 >
-                  {t("hourlyForecast")}
+                  Hourly forecast
                 </ForecastButton>
 
                 <ForecastButton
@@ -178,7 +176,7 @@ export default function WeatherList({
                     setSelectedMoreCity(null);
                   }}
                 >
-                  {t("weeklyForecast")}
+                  Weekly forecast
                 </ForecastButton>
               </ForecastButtons>
 
@@ -240,7 +238,7 @@ export default function WeatherList({
                     setSelectedWeeklyCity(null);
                   }}
                 >
-                  {t("seeMore")}
+                  See more
                 </MoreButton>
 
                 <DeleteButton
